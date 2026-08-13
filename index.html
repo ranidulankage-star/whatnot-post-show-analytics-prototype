@@ -228,6 +228,8 @@ tbody tr:hover td:first-child{background:var(--paper-2)}
 .showcell .id{display:block;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-top:3px}
 .showcell .du{display:block;font-size:11.5px;color:var(--ink-2);margin-top:1px}
 .tlink{color:var(--link);font-weight:620}
+#showsTable tbody tr{cursor:pointer}
+#showsTable tbody tr:focus-visible{outline:2px solid var(--link);outline-offset:-2px}
 .cellspark{width:74px;height:22px;display:block;margin-left:auto}
 
 /* bars / bench / recos */
@@ -1651,9 +1653,14 @@ function renderShows(){
   SHOW_COLS.forEach(k=>cols.push({k,l:ALL_COLS[k]}));
   cols.push({k:"act",l:"",ns:1,render:()=>'<a class="tlink" href="#">Open →</a>'});
   table("#showsTable",cols,rows);
-  $("#showsTable").querySelectorAll("tbody tr").forEach(tr=>{
-    tr.style.cursor="pointer";tr.addEventListener("click",()=>go("show"))});
 }
+/* Row clicks are DELEGATED to the table, not bound per-row: table() rebuilds
+   tbody via innerHTML on every sort, which would silently drop per-row
+   listeners and leave the list looking interactive but dead. */
+$("#showsTable").addEventListener("click",e=>{
+  if(e.target.closest("a"))e.preventDefault();   // the "Open →" link must not jump to #
+  if(e.target.closest("tbody tr"))go("show");
+});
 
 function renderHeroGrid(){
   $("#heroGrid").innerHTML=HERO_SEL.map(k=>{const m=CAT[k];if(!m)return"";
