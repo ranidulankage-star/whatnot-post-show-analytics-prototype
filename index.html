@@ -146,9 +146,6 @@ input{font:inherit}
 .seg button{padding:6px 12px;font-size:12.5px;font-weight:580;color:var(--ink-2);border-right:1px solid var(--rule-2)}
 .seg button:last-child{border-right:none}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-.seg.dk{border-color:rgba(250,250,247,.24)}
-.seg.dk button{color:rgba(250,250,247,.62);border-right-color:rgba(250,250,247,.24)}
-.seg.dk button[aria-pressed="true"]{background:var(--yellow);color:var(--ink)}
 
 /* charts */
 .cw{position:relative;overflow-x:auto}
@@ -167,28 +164,22 @@ svg.chart{display:block;width:100%;overflow:visible}
 .note{font-size:11.5px;color:var(--ink-3);line-height:1.5}
 
 /* band */
-.band{background:var(--band);color:var(--paper);padding:0}
+.band{background:var(--paper-2);color:var(--ink);padding:0;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .band-in{max-width:1360px;margin:0 auto;padding:40px}
-.band .ml{color:rgba(250,250,247,.5)}
-.band h3{color:var(--paper)}
-.band .note{color:rgba(250,250,247,.5)}
-.band .lgd{color:rgba(250,250,247,.68)}
-.band .btn{background:transparent;border-color:rgba(250,250,247,.28);color:var(--paper)}
-.band .btn:hover{border-color:var(--paper)}
-.band .tip{background:var(--paper);color:var(--ink)}
-.band .tip .tr .nm{color:var(--ink-2)}
-.band .tip .ev{border-top-color:var(--rule);color:var(--ink-2)}
 .hero-top{display:grid;grid-template-columns:auto 1fr;gap:38px;align-items:end;padding-bottom:28px;
-  border-bottom:1px solid rgba(250,250,247,.14)}
+  border-bottom:1px solid var(--rule)}
 .hero-gmv .n{font-size:64px;font-weight:780;letter-spacing:-.05em;line-height:1;margin-top:8px}
-.hero-gmv .split{display:flex;gap:22px;margin-top:12px;font-size:13px;color:rgba(250,250,247,.65)}
-.hero-gmv .split b{color:var(--paper);font-weight:660}
+.hero-gmv .split{display:flex;gap:22px;margin-top:12px;font-size:13px;color:var(--ink-2)}
+.hero-gmv .split b{color:var(--ink);font-weight:660}
 .hchips{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
 .hchips .c .v{font-size:22px;font-weight:730;letter-spacing:-.035em;margin-top:5px}
 .hgrid{display:grid;grid-template-columns:repeat(4,1fr)}
-.hg{padding:17px 20px 19px;border-right:1px solid rgba(250,250,247,.12);border-bottom:1px solid rgba(250,250,247,.12)}
+.hg{padding:17px 20px 19px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .hg:nth-child(4n+1){padding-left:0}
 .hg:nth-child(4n){border-right:none}
+.bmk{display:block;font-size:10px;font-weight:660;letter-spacing:.01em;margin-bottom:6px}
+.bmk.up{color:var(--money)}.bmk.dn{color:var(--crit)}.bmk.none{color:var(--ink-3)}
 .hg .k{display:flex;align-items:center;gap:6px;margin-bottom:5px}
 .hg .v{font-size:21px;font-weight:730;letter-spacing:-.035em}
 .hg .v small{font-size:12.5px;font-weight:620}
@@ -270,7 +261,6 @@ details.disc .db{padding:10px 0 0}
 .dateinput input{border:none;outline:none;width:82px;font-size:12.5px;font-variant-numeric:tabular-nums;background:none;color:var(--ink)}
 .info{width:12px;height:12px;border-radius:50%;border:1px solid var(--rule-2);color:var(--ink-3);font-size:8px;
   display:inline-grid;place-items:center;cursor:help;font-weight:700;flex:none}
-.band .info{border-color:rgba(250,250,247,.3);color:rgba(250,250,247,.55)}
 /* modal */
 .mask{position:fixed;inset:0;background:rgba(17,17,16,.5);display:grid;place-items:center;z-index:100;padding:20px}
 .modal{background:var(--paper);border-radius:12px;width:min(880px,100%);max-height:86vh;display:flex;flex-direction:column;overflow:hidden}
@@ -564,19 +554,22 @@ details.disc .db{padding:10px 0 0}
     </div>
     <div class="bh" style="margin:26px 0 0;align-items:center">
       <div class="t"><span class="ml">Key data</span>
-        <span class="ml" style="color:rgba(250,250,247,.35);margin-left:8px" id="heroCount"></span></div>
+        <span class="ml" style="margin-left:8px" id="heroCount"></span></div>
       <button class="btn" id="heroCustom">✎ Select metrics</button></div>
     <div class="hgrid" id="heroGrid"></div>
+    <p class="note" style="margin-top:14px">Benchmarks compare this show against your own average for the
+      same metric. Post-sale transactions such as refunds and cancellations can take up to 24 hours to be
+      reflected in estimated sales.</p>
 
     <div style="margin-top:38px">
       <div class="bh"><div class="t"><h3>Run of show</h3>
-        <div class="s" style="color:rgba(250,250,247,.55)">Every minute you were live. Pick up to two metrics;
+        <div class="s">Every minute you were live. Pick up to two metrics;
           click anywhere to jump to that moment in the replay.</div></div>
-        <div class="seg dk" id="tWin"><button aria-pressed="true" data-w="all">Whole show</button>
+        <div class="seg" id="tWin"><button aria-pressed="true" data-w="all">Whole show</button>
           <button aria-pressed="false" data-w="30">Last 30 min</button>
           <button aria-pressed="false" data-w="5">Last 5 min</button></div>
         <button class="btn" data-x="Minute-by-minute">↓</button></div>
-      <div class="seg dk" id="tPick" style="margin-bottom:14px"></div>
+      <div class="seg" id="tPick" style="margin-bottom:14px"></div>
       <div class="lgd" id="tlLgd" style="margin-bottom:12px"></div>
       <div class="cw"><svg class="chart" id="tlChart" height="300"></svg><div class="tip" id="tlTip"></div></div>
       <p class="note" style="margin-top:12px">Two panels on one time axis, not two y-scales on one plot.</p>
@@ -863,54 +856,90 @@ const TOP_ORDERS=[["rippedandgraded",621,"p"],["boxbreakbetty",460,""],["mint_or
   ["corner_case_cards",429,""],["chromechaser",418,""],["slabvaultco",393,""],["penny_sleeves",371,"g"],
   ["thepatchhunter",368,""],["shoeboxlegends",350,""],["autochaser88",318,"p"]];
 
-/* ═══════════ metric catalogue — every value populated ═══════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   METRIC CATALOGUE — the union of (a) every card on today's post-show
+   page and (b) every metric in the live analytics panel, so nothing a
+   seller sees live or post-show today is missing here.
+   b = benchmark vs this seller's own average for the metric, matching
+   the "Below Average" chip today's page puts on every card.
+   ═══════════════════════════════════════════════════════════════════ */
+const LIVE_SALES=104820.30, SHOP_SALES=13612.25, AUCTION=88540.05, BIN=16280.25;
+const LIVE_ORD=1782, SHOP_ORD=223;
 const CATALOG=[
-  {g:"Transaction",k:"gmv",l:"GMV",v:N2(H.gmv)},
-  {g:"Transaction",k:"earn",l:"Estimated earnings",v:N2(H.gmv*.849),
+  // ── Sales ─────────────────────────────────────────────────────────
+  {g:"Sales",k:"gmv",l:"Estimated sales",v:N2(H.gmv),b:+31,
+    tip:"Total value of all sales during the show, including shop purchases, before fees, refunds and cancellations."},
+  {g:"Sales",k:"earn",l:"Total estimated earnings",v:N2(H.gmv*.849),b:+30,
     tip:"After Whatnot fees and payment processing. Excludes your COGS and shipping."},
-  {g:"Transaction",k:"buyers",l:"Unique buyers",v:fmt.num(H.buyers)},
-  {g:"Transaction",k:"orders",l:"Orders",v:fmt.num(H.orders)},
-  {g:"Transaction",k:"aov",l:"AOV",v:N2(H.aov)},
-  {g:"Transaction",k:"auc",l:"Auction GMV",v:N2(H.auction)},
-  {g:"Transaction",k:"bin",l:"Buy Now GMV",v:N2(H.bin)},
-  {g:"Transaction",k:"items",l:"Items sold",v:fmt.num(H.orders)},
-  {g:"Transaction",k:"refund",l:"Refund rate",v:"2.10%"},
-  {g:"Traffic efficiency",k:"impr",l:"Impressions",v:(H_IMPR/1e6).toFixed(2)+"M"},
-  {g:"Traffic efficiency",k:"views",l:"Views",v:fmt.num(H.viewers)},
-  {g:"Traffic efficiency",k:"gpm",l:"Show GPM",v:N2(H.gmv/H_IMPR*1000),tip:"GMV per 1,000 impressions."},
-  {g:"Traffic efficiency",k:"iph",l:"Impressions / hour",v:(H_IMPR/(H.dur/60)/1000).toFixed(2)+"K"},
-  {g:"Traffic efficiency",k:"enter",l:"Enter show rate",v:"1.01%"},
-  {g:"Traffic efficiency",k:"watch",l:"Avg. watch time",v:"4m 12s"},
-  {g:"Traffic efficiency",k:"wgpm",l:"Watch GPM",v:"91.40"},
-  {g:"Traffic efficiency",k:"pimp",l:"Item impressions",v:"412.80K"},
-  {g:"Traffic efficiency",k:"ptap",l:"Item taps",v:fmt.num(31240)},
-  {g:"Traffic efficiency",k:"ctr",l:"Show CTR",v:"7.57%"},
-  {g:"Traffic efficiency",k:"ctor",l:"Tap-to-order rate",v:"6.42%"},
-  {g:"Traffic efficiency",k:"v1m",l:"Views over 1 min",v:fmt.num(9420)},
-  {g:"Interactions",k:"foll",l:"Followers gained",v:fmt.num(H.foll)},
-  {g:"Interactions",k:"frate",l:"Follow rate",v:N2(H.foll/H.viewers*100)+"%"},
-  {g:"Interactions",k:"comm",l:"Comments",v:fmt.num(11840)},
-  {g:"Interactions",k:"crate",l:"Comment rate",v:"64.10%"},
-  {g:"Interactions",k:"share",l:"Shares",v:fmt.num(1284)},
-  {g:"Interactions",k:"like",l:"Likes",v:fmt.num(48210)},
-  {g:"Audience",k:"ccv",l:"Peak concurrent",v:fmt.num(H.ccv)},
-  {g:"Audience",k:"ret",l:"Returning buyer rate",v:N2(100-H.newPct)+"%"},
-  {g:"Audience",k:"newyou",l:"New to you",v:fmt.num(Math.round(H.buyers*H.newPct/100))},
-  {g:"Audience",k:"opb",l:"Orders per buyer",v:N2(H.orders/H.buyers)},
-  {g:"Audience",k:"newcat",l:"New to category",v:fmt.num(185)},
-  {g:"Audience",k:"bid",l:"Bidders",v:fmt.num(4218)},
-  {g:"Pace",k:"gph",l:"GMV per hour",v:N2(HGPH)},
-  {g:"Pace",k:"oph",l:"Orders / hour",v:N2(H.orders/(H.dur/60),1)},
-  {g:"Pace",k:"sell",l:"Sell-through",v:N2(H.orders/H.items*100)+"%"},
-  {g:"Pace",k:"dead",l:"Dead air",v:H.dead+" min"},
-  {g:"Pace",k:"itemsrun",l:"Items run",v:fmt.num(H.items)},
-  {g:"Ads",k:"roas",l:"Ads ROAS",v:"4.12"},
-  {g:"Ads",k:"acost",l:"Ads cost",v:N2(2840)},
-  {g:"Ads",k:"agmv",l:"Ads GMV",v:N2(11700)},
-  {g:"Ads",k:"aord",l:"Ads orders",v:fmt.num(198)}
+  {g:"Sales",k:"completed",l:"Completed earnings",v:"0.00",b:null,
+    tip:"Earnings that have finished settling. Fills in as orders clear the return window."},
+  {g:"Sales",k:"orders",l:"Orders",v:fmt.num(H.orders),b:+19,
+    tip:"Orders completed during the show, excluding cancelled orders and giveaways."},
+  {g:"Sales",k:"aov",l:"Average order value",v:N2(H.aov),b:+7,
+    tip:"Average spend per order, excluding giveaways."},
+  {g:"Sales",k:"gph",l:"GMV / hr",v:N2(HGPH),b:+31,tip:"Gross sales divided by hours streamed."},
+  {g:"Sales",k:"oph",l:"Orders / hr",v:N2(H.orders/(H.dur/60),1),b:+14,
+    tip:"Paid orders per hour streamed. Excludes giveaways."},
+  {g:"Sales",k:"livesales",l:"Live sales",v:N2(LIVE_SALES),b:+28,
+    tip:"Sales made directly through the live show — auction and Buy It Now."},
+  {g:"Sales",k:"shopsales",l:"Shop sales",v:N2(SHOP_SALES),b:+44,
+    tip:"Sales made through your shop while the show was live."},
+  {g:"Sales",k:"liveord",l:"Live orders",v:fmt.num(LIVE_ORD),b:+17},
+  {g:"Sales",k:"shopord",l:"Shop orders",v:fmt.num(SHOP_ORD),b:+38},
+  {g:"Sales",k:"liveaov",l:"Live AOV",v:N2(LIVE_SALES/LIVE_ORD),b:+9},
+  {g:"Sales",k:"shopaov",l:"Shop AOV",v:N2(SHOP_SALES/SHOP_ORD),b:+4},
+  {g:"Sales",k:"auction",l:"Auction sales",v:N2(AUCTION),b:+26},
+  {g:"Sales",k:"bin",l:"Buy It Now sales",v:N2(BIN),b:+41},
+  {g:"Sales",k:"tips",l:"Tips",v:N2(386.50),b:-12},
+  {g:"Sales",k:"giveaways",l:"Giveaways",v:"14",b:+8,tip:"Number of giveaways run during the show."},
+  {g:"Sales",k:"givspend",l:"Giveaway spend",v:N2(1240),b:+22},
+  {g:"Sales",k:"prebid",l:"Active pre-bid products",v:"38",b:+16,
+    tip:"Unsold items that already have at least one bid waiting."},
+  {g:"Sales",k:"refund",l:"Refund rate",v:"2.10%",b:-19},
+  // ── Audience ──────────────────────────────────────────────────────
+  {g:"Audience",k:"views",l:"Total views",v:fmt.num(41208),b:+22,
+    tip:"Every view of the show, including repeat views by the same viewer."},
+  {g:"Audience",k:"uniq",l:"Unique viewers",v:fmt.num(H.viewers),b:+17,
+    tip:"Distinct people who watched for at least one second."},
+  {g:"Audience",k:"ccv",l:"Max concurrent viewers",v:fmt.num(H.ccv),b:+12,
+    tip:"The most people watching at the same moment."},
+  {g:"Audience",k:"vph",l:"Viewers / hr",v:fmt.num(H.viewers/(H.dur/60)),b:+15},
+  {g:"Audience",k:"watch",l:"Avg. watch time",v:"4m 12s",b:+6,
+    tip:"Total watch time across all sessions divided by unique viewers."},
+  {g:"Audience",k:"newview",l:"New viewers",v:"62.40%",b:+9,
+    tip:"Share of viewers with no prior watch or purchase from you."},
+  {g:"Audience",k:"retview",l:"Returning viewers",v:"37.60%",b:+4},
+  {g:"Audience",k:"shares",l:"Show shares",v:fmt.num(284),b:-8,
+    tip:"Number of times the show was shared."},
+  {g:"Audience",k:"bookmarks",l:"Bookmarks",v:fmt.num(512),b:+11},
+  {g:"Audience",k:"foll",l:"Followers gained",v:fmt.num(H.foll),b:+24},
+  {g:"Audience",k:"impr",l:"Impressions",v:(H_IMPR/1e6).toFixed(2)+"M",b:+18},
+  {g:"Audience",k:"gpm",l:"Show GPM",v:N2(H.gmv/H_IMPR*1000),b:+21,tip:"GMV per 1,000 impressions."},
+  // ── Buyers ────────────────────────────────────────────────────────
+  {g:"Buyers",k:"buyers",l:"Buyers",v:fmt.num(H.buyers),b:+14,
+    tip:"Distinct people who completed at least one purchase, excluding giveaways."},
+  {g:"Buyers",k:"newbuy",l:"First time buyers",v:fmt.num(752),b:+22,
+    tip:"Buyers with no previous purchase from you."},
+  {g:"Buyers",k:"retbuy",l:"Returning buyers",v:fmt.num(532),b:+5,
+    tip:"Buyers who had bought from you before this show."},
+  {g:"Buyers",k:"retrate",l:"Returning buyer rate",v:"41.40%",b:+5},
+  {g:"Buyers",k:"bidders",l:"Bidders",v:fmt.num(4218),b:+27,
+    tip:"Distinct viewers who placed at least one bid."},
+  {g:"Buyers",k:"opb",l:"Orders per buyer",v:N2(H.orders/H.buyers),b:+4},
+  {g:"Buyers",k:"rating",l:"Average order rating",v:"4.8",b:+2},
+  // ── Show ──────────────────────────────────────────────────────────
+  {g:"Show",k:"dur",l:"Show duration",v:"2 hr 41 min",b:+18},
+  {g:"Show",k:"itemsrun",l:"Items run",v:fmt.num(H.items),b:+12},
+  {g:"Show",k:"sell",l:"Sell-through",v:N2(H.orders/H.items*100)+"%",b:-8},
+  {g:"Show",k:"dead",l:"Dead air",v:H.dead+" min",b:-23},
+  // ── Ads ───────────────────────────────────────────────────────────
+  {g:"Ads",k:"roas",l:"Ads ROAS",v:"4.12",b:+13},
+  {g:"Ads",k:"acost",l:"Ads cost",v:N2(2840),b:+6},
+  {g:"Ads",k:"agmv",l:"Ads GMV",v:N2(11700),b:+19},
+  {g:"Ads",k:"aord",l:"Ads orders",v:fmt.num(198),b:+11}
 ];
 const CAT=Object.fromEntries(CATALOG.map(m=>[m.k,m]));
-let HERO_SEL=["gmv","earn","orders","aov","buyers","gph","impr","gpm","views","ret","sell","oph"];
+let HERO_SEL=["gmv","earn","completed","orders","aov","gph","oph","buyers","newbuy","retbuy","uniq","ccv","views","watch","shares","dur"];
 
 const FIGS=[
   {ml:"Estimated sales",v:fmt.usd(T.gmv),d:+14.2,sub:"Estimated earnings "+fmt.usd(T.gmv*.849),
@@ -1427,7 +1456,7 @@ function drawScatter(){
   const yOf=v=>y1-(v/top)*(y1-T2),xOf=m=>x0+(m/TLN)*(x1-x0);
   axes(svg,x0,x1,y1,tk.map(v=>({v,y:yOf(v)})),fmt.usdk);
   EV.forEach(e=>svg.appendChild(el("line",{x1:xOf(e.m),x2:xOf(e.m),y1:T2,y2:y1,
-    stroke:C("--yellow"),"stroke-width":1,opacity:.35})));
+    stroke:C("--ink"),"stroke-width":1,opacity:.18})));
   ITEMS.forEach(it=>{
     const r=3+Math.sqrt(it.q)*1.9;
     const c=el("circle",{cx:xOf(it.t),cy:yOf(it.p),r,fill:C(it.auc?"--s1":"--s2"),
@@ -1530,7 +1559,7 @@ function drawTL(){
   tSel.forEach((key,pi)=>{const spec=TREND[key],p=P[pi],col=C(spec.c);
     const tk=ticks(Math.max(...data.map(d=>d[key]))*1.16,pi&&two?2:3),top=tk[tk.length-1];
     const yOf=v=>p.b-(v/top)*(p.b-p.t);
-    axes(svg,x0,x1,p.b,tk.map(v=>({v,y:yOf(v)})),v=>key==="gmv"?fmt.usdk(v):fmt.num(v),true);
+    axes(svg,x0,x1,p.b,tk.map(v=>({v,y:yOf(v)})),v=>key==="gmv"?fmt.usdk(v):fmt.num(v));
     if(spec.kind==="line"){
       const d=data.map((r,i)=>(i?"L":"M")+xOf(r.m).toFixed(1)+" "+yOf(r[key]).toFixed(1)).join(" ");
       const gid="tg"+pi,defs=el("defs"),lg=el("linearGradient",{id:gid,x1:0,y1:0,x2:0,y2:1});
@@ -1542,17 +1571,17 @@ function drawTL(){
     }else{const bw=Math.max(1.5,(x1-x0)/n-2);
       data.forEach(r=>{if(r[key]>0)svg.appendChild(el("rect",{x:xOf(r.m)-bw/2,y:yOf(r[key]),width:bw,
         height:Math.max(1,p.b-yOf(r[key])),rx:Math.min(2,bw/2),fill:col}))})}
-    const t=el("text",{x:x0,y:p.t-6,fill:"rgba(250,250,247,.5)","font-size":10,"font-weight":700,
+    const t=el("text",{x:x0,y:p.t-6,fill:C("--ink-3"),"font-size":10,"font-weight":700,
       "font-family":C("--sans"),"letter-spacing":".13em"});t.textContent=spec.l.toUpperCase();svg.appendChild(t)});
-  const yTop=P[0].t,yBot=P[P.length-1].b,yc=YC();
+  const yTop=P[0].t,yBot=P[P.length-1].b,yc=C("--ink");
   EV.filter(e=>e.m>=m0&&e.m<=m1).forEach(e=>{const x=xOf(e.m),sh=EVT[e.k].s;
-    svg.appendChild(el("line",{x1:x,x2:x,y1:yTop,y2:yBot,stroke:yc,"stroke-width":1,opacity:.30}));
+    svg.appendChild(el("line",{x1:x,x2:x,y1:yTop,y2:yBot,stroke:yc,"stroke-width":1,opacity:.22}));
     if(sh==="circle")svg.appendChild(el("circle",{cx:x,cy:yTop,r:3.6,fill:yc}));
     else if(sh==="square")svg.appendChild(el("rect",{x:x-3.2,y:yTop-3.2,width:6.4,height:6.4,fill:yc}));
     else svg.appendChild(el("path",{d:`M ${x} ${yTop-4.4} L ${x+4.4} ${yTop} L ${x} ${yTop+4.4} L ${x-4.4} ${yTop} Z`,fill:yc}))});
   const step=n>90?20:n>30?10:1;
-  data.forEach((r,i)=>{if(i%step===0||i===n-1)xlab(svg,xOf(r.m),yBot+20,clock(r.m),true)});
-  const cross=el("line",{y1:yTop,y2:yBot,stroke:"rgba(250,250,247,.3)","stroke-width":1,opacity:0});
+  data.forEach((r,i)=>{if(i%step===0||i===n-1)xlab(svg,xOf(r.m),yBot+20,clock(r.m))});
+  const cross=el("line",{y1:yTop,y2:yBot,stroke:C("--rule-2"),"stroke-width":1,opacity:0});
   svg.appendChild(cross);
   const hit=el("rect",{x:x0,y:yTop,width:x1-x0,height:yBot-yTop,fill:"transparent",cursor:"pointer"});
   svg.appendChild(hit);
@@ -1569,7 +1598,7 @@ function drawTL(){
   hit.addEventListener("click",ev=>toast(`Replay would jump to ${clock(at(ev.clientX))} PM`));
   $("#tlLgd").innerHTML=tSel.map(k=>`<span><i style="background:${C(TREND[k].c)}"></i>${TREND[k].l}</span>`).join("")
     +`<span style="opacity:.45">│</span>`
-    +Object.values(EVT).map(v=>`<span style="opacity:.8"><b style="color:${YC()};font-size:11px">${evGlyph[v.s]}</b> ${v.l}</span>`).join("");
+    +Object.values(EVT).map(v=>`<span><b style="color:${C("--ink")};font-size:11px">${evGlyph[v.s]}</b> ${v.l}</span>`).join("");
 }
 
 /* ═══════════ non-chart renderers ═══════════ */
@@ -1664,7 +1693,12 @@ $("#showsTable").addEventListener("click",e=>{
 
 function renderHeroGrid(){
   $("#heroGrid").innerHTML=HERO_SEL.map(k=>{const m=CAT[k];if(!m)return"";
-    return `<div class="hg"><div class="k"><span class="ml">${m.l}</span>
+    /* benchmark chip vs this seller's own average — the pattern today's
+       post-show page puts on every card */
+    const bm=m.b==null?'<span class="bmk none">No benchmark yet</span>'
+      :`<span class="bmk ${m.b>=0?"up":"dn"}">${m.b>=0?"▲":"▼"}${Math.abs(m.b)}% ${m.b>=0?"above":"below"} average</span>`;
+    return `<div class="hg">${bm}
+      <div class="k"><span class="ml">${m.l}</span>
       ${m.tip?`<span class="info" title="${m.tip}">i</span>`:""}</div>
       <div class="v">${bigsmall(m.v)}</div></div>`}).join("");
   $("#heroCount").textContent=HERO_SEL.length+" of 16";
@@ -1786,10 +1820,11 @@ $("#shSub").innerHTML=`${s0.date.toLocaleDateString("en-US",{weekday:"short",mon
   <span class="sep">·</span>${fmt.num(H.items)} items run`;
 $("#shMeta").textContent="Duration 2 hr 41 min · Aug 10, 19:02:11 – 21:43:05 PDT";
 $("#heroGmv").textContent=fmt.num(H.gmv);
-$("#heroSplit").innerHTML=`<span>Auction <b>${fmt.usd2(H.auction)}</b></span>
-  <span>Buy Now <b>${fmt.usd2(H.bin)}</b></span>`;
-$("#heroChips").innerHTML=[["Items sold",fmt.num(H.orders)],["Auction items",fmt.num(1631)],
-  ["Unique buyers",fmt.num(H.buyers)],["Peak viewers",fmt.num(H.ccv)]]
+$("#heroSplit").innerHTML=`<span>Auction <b>${fmt.usd2(AUCTION)}</b></span>
+  <span>Buy It Now <b>${fmt.usd2(BIN)}</b></span>
+  <span>Shop <b>${fmt.usd2(SHOP_SALES)}</b></span>`;
+$("#heroChips").innerHTML=[["Orders",fmt.num(H.orders)],["Buyers",fmt.num(H.buyers)],
+  ["Unique viewers",fmt.num(H.viewers)],["Max concurrent",fmt.num(H.ccv)]]
   .map(c=>`<div class="c"><div class="ml">${c[0]}</div><div class="v">${c[1]}</div></div>`).join("");
 renderHeroGrid();
 bench("#benchRows",[{l:"This show",v:HGPH,me:1},{l:"Your last show",v:34620},{l:"Your L28 average",v:36880},
