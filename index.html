@@ -1,0 +1,1810 @@
+<title>Whatnot Post-Show Analytics — Run of Show</title>
+<style>
+:root{
+  color-scheme: light;
+  --paper:#FAFAF7; --paper-2:#F3F2EC; --band:#12110C;
+  --ink:#111110; --ink-2:#67655C; --ink-3:#928F82;
+  --rule:#E3E1D6; --rule-2:#CFCCBE; --grid:#ECEAE0;
+  --yellow:#FFE01B; --yellow-ink:#6B5A00;
+  --s1:#1D9BF0; --s2:#EB6834; --s3:#1BAF7A; --s4:#7B5CF0; --s5:#E34948;
+  --q1:#CDE2FB; --q2:#9EC5F4; --q3:#5598E7; --q4:#2A78D6; --q5:#1C5CAB; --q6:#104281;
+  --money:#136B39; --crit:#B23018; --link:#0B5FD0;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;
+  line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;letter-spacing:-.032em;text-wrap:balance;font-weight:700}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input{font:inherit}
+:focus-visible{outline:2px solid var(--link);outline-offset:3px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.hidden{display:none!important}
+.ml{font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+
+/* chrome */
+.top{position:sticky;top:0;z-index:60;background:var(--paper);border-bottom:1px solid var(--rule)}
+.top-in{max-width:1360px;margin:0 auto;padding:0 40px;height:56px;display:flex;align-items:center;gap:14px}
+.wm{width:26px;height:26px;border-radius:7px;background:var(--yellow);display:grid;place-items:center}
+.wm svg{width:16px;height:16px;fill:var(--ink)}
+.crumbs{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-3)}
+.crumbs b{color:var(--ink);font-weight:640}
+.sp{flex:1}
+.acct{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
+.acct .av{width:24px;height:24px;border-radius:50%;background:linear-gradient(145deg,var(--yellow),#C9A700)}
+.vtabs{max-width:1360px;margin:0 auto;padding:0 40px;display:flex;gap:28px}
+.vtab{padding:14px 0;font-size:13.5px;font-weight:600;color:var(--ink-3);position:relative}
+.vtab:hover{color:var(--ink)}
+.vtab[aria-selected="true"]{color:var(--ink)}
+.vtab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink)}
+
+/* masthead — a product header, not a hero. Title, who, and the one status
+   line that matters (how fresh the data is). No tagline. */
+.mast{max-width:1360px;margin:0 auto;padding:24px 40px 20px;border-bottom:1px solid var(--rule);
+  display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.mast .who{flex:1;min-width:260px}
+.mast h1{font-size:28px;line-height:1.1;letter-spacing:-.035em}
+.mast .sub{font-size:13px;color:var(--ink-2);margin-top:5px;display:flex;align-items:center;
+  gap:8px;flex-wrap:wrap}
+.mast .sub b{color:var(--ink);font-weight:640}
+.mast .sep{color:var(--rule-2)}
+.fresh{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2);
+  border:1px solid var(--rule-2);border-radius:999px;padding:5px 12px;white-space:nowrap}
+.fresh b{color:var(--ink);font-weight:660}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--money);position:relative;flex:none}
+.pulse::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:1px solid var(--money);opacity:.5;
+  animation:pl 2.2s ease-out infinite}
+@keyframes pl{0%{transform:scale(.6);opacity:.6}100%{transform:scale(1.7);opacity:0}}
+.period{max-width:1360px;margin:0 auto;padding:16px 40px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  border-bottom:1px solid var(--rule);position:sticky;top:56px;background:var(--paper);z-index:50}
+.period .rng{font-size:16px;font-weight:700;letter-spacing:-.025em}
+.nav{width:26px;height:26px;border:1px solid var(--rule-2);border-radius:50%;display:grid;place-items:center;
+  font-size:13px;color:var(--ink-2)}
+.nav:hover{border-color:var(--ink);color:var(--ink)}
+
+/* spread */
+.spread{max-width:1360px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:186px 1fr;gap:52px;align-items:start}
+.rail{position:sticky;top:126px;padding-top:38px}
+.rail ol{list-style:none;margin:0;padding:0}
+.rail a{display:grid;grid-template-columns:26px 1fr;gap:9px;padding:9px 0 9px 12px;font-size:13px;color:var(--ink-3);
+  text-decoration:none;border-left:2px solid var(--rule);align-items:baseline;line-height:1.3}
+.rail a:hover{color:var(--ink);border-left-color:var(--rule-2)}
+.rail a .no{font-family:var(--mono);font-size:10.5px;font-weight:600}
+.rail a.on{color:var(--ink);border-left-color:var(--yellow);font-weight:640}
+.rail a.on .no{color:var(--yellow-ink)}
+.rail .foot{margin-top:22px;padding-left:14px;font-size:11.5px;color:var(--ink-3);line-height:1.5}
+@media(max-width:1080px){.spread{grid-template-columns:1fr;gap:0}.rail{display:none}}
+.sheet{padding-top:38px;min-width:0}
+.chapter{padding-bottom:46px;margin-bottom:46px;border-bottom:1px solid var(--rule)}
+.chapter:last-child{border-bottom:none}
+.chead{margin-bottom:26px}
+.chead h2{font-size:27px;letter-spacing:-.038em}
+.chead p{margin:8px 0 0;font-size:14px;color:var(--ink-2);max-width:62ch;line-height:1.55}
+
+/* figures */
+.figs{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--ink);border-bottom:1px solid var(--rule)}
+.fig{padding:20px 24px 22px;border-right:1px solid var(--rule)}
+.fig:last-child{border-right:none}.fig:first-child{padding-left:0}
+.fig .n{font-size:36px;font-weight:760;letter-spacing:-.048em;line-height:1;margin:9px 0 7px}
+.fig .n small{font-size:18px;font-weight:660;color:var(--ink-2)}
+.fig .d{font-size:12px;font-weight:640}
+.up{color:var(--money)}.dn{color:var(--crit)}.flat{color:var(--ink-3)}
+.fig .sp2{margin-top:10px;height:30px}
+@media(max-width:760px){.figs{grid-template-columns:1fr}.fig{border-right:none;border-bottom:1px solid var(--rule);padding-left:0}}
+.shelf{display:grid;grid-template-columns:repeat(4,1fr)}
+.mi{padding:15px 20px 17px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.shelf .mi:nth-child(4n){border-right:none}
+.shelf .mi:nth-child(4n+1){padding-left:0}
+.mi .k{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.mi .v{font-size:20px;font-weight:720;letter-spacing:-.035em;line-height:1.1}
+.mi .v small{font-size:12px;font-weight:600;color:var(--ink-2)}
+.mi .d{font-size:11.5px;font-weight:640;margin-top:3px}
+@media(max-width:820px){.shelf{grid-template-columns:repeat(2,1fr)}
+  .shelf .mi:nth-child(4n){border-right:1px solid var(--rule)}
+  .shelf .mi:nth-child(2n){border-right:none}
+  .shelf .mi:nth-child(2n+1){padding-left:0}}
+.gswitch{display:flex;border-bottom:1px solid var(--rule)}
+.gswitch button{padding:12px 20px 11px;font-size:13px;font-weight:620;color:var(--ink-3);position:relative}
+.gswitch button:first-child{padding-left:0}
+.gswitch button:hover{color:var(--ink)}
+.gswitch button[aria-pressed="true"]{color:var(--ink)}
+.gswitch button[aria-pressed="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--yellow)}
+
+/* explorer controls */
+.ctrls{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;padding:14px 16px;background:var(--paper-2);
+  border-radius:10px}
+.ctrl{display:flex;flex-direction:column;gap:5px}
+.ctrl select{appearance:none;-webkit-appearance:none;border:1px solid var(--rule-2);background:var(--paper);
+  border-radius:6px;padding:7px 26px 7px 10px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink-3) 50%),
+    linear-gradient(135deg,var(--ink-3) 50%,transparent 50%);
+  background-position:calc(100% - 14px) 52%,calc(100% - 9px) 52%;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.ctrl select:hover{border-color:var(--ink)}
+.ctrl select:disabled{opacity:.45;cursor:not-allowed}
+
+/* blocks */
+.block{background:var(--paper-2);border-radius:10px;padding:20px 22px}
+.block.plain{background:none;padding:0}
+.bh{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.bh .t{flex:1;min-width:0}
+.bh h3{font-size:14.5px;letter-spacing:-.02em}
+.bh .s{font-size:12.5px;color:var(--ink-3);margin-top:3px;line-height:1.4}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;align-items:start}
+.g23{display:grid;grid-template-columns:1.6fr 1fr;gap:26px;align-items:start}
+@media(max-width:980px){.g2,.g3,.g23{grid-template-columns:1fr}}
+.stack{display:grid;gap:34px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:6px;font-size:12.5px;
+  font-weight:620;border:1px solid var(--rule-2);white-space:nowrap;background:var(--paper)}
+.btn:hover{border-color:var(--ink)}
+.btn.dark{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.wide{width:100%;justify-content:center;padding:10px}
+.lnk{color:var(--link);font-size:13px;font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--rule-2);border-radius:6px;overflow:hidden}
+.seg button{padding:6px 12px;font-size:12.5px;font-weight:580;color:var(--ink-2);border-right:1px solid var(--rule-2)}
+.seg button:last-child{border-right:none}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg.dk{border-color:rgba(250,250,247,.24)}
+.seg.dk button{color:rgba(250,250,247,.62);border-right-color:rgba(250,250,247,.24)}
+.seg.dk button[aria-pressed="true"]{background:var(--yellow);color:var(--ink)}
+
+/* charts */
+.cw{position:relative;overflow-x:auto}
+svg.chart{display:block;width:100%;overflow:visible}
+.lgd{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);align-items:center}
+.lgd span{display:inline-flex;align-items:center;gap:6px}
+.lgd i{width:8px;height:8px;border-radius:2px;flex:none}
+.tip{position:absolute;pointer-events:none;z-index:40;background:var(--ink);color:var(--paper);border-radius:8px;
+  padding:9px 11px;font-size:12px;min-width:136px;opacity:0;transition:opacity .1s}
+.tip .th{font-weight:700;margin-bottom:6px}
+.tip .tr{display:flex;justify-content:space-between;gap:10px;margin-top:3px}
+.tip .tr .nm{display:flex;align-items:center;gap:6px;color:rgba(250,250,247,.7)}
+.tip .tr i{width:8px;height:8px;border-radius:2px;flex:none}
+.tip .tr b{font-variant-numeric:tabular-nums}
+.tip .ev{margin-top:7px;padding-top:6px;border-top:1px solid rgba(250,250,247,.18);color:rgba(250,250,247,.75);font-size:11px}
+.note{font-size:11.5px;color:var(--ink-3);line-height:1.5}
+
+/* band */
+.band{background:var(--band);color:var(--paper);padding:0}
+.band-in{max-width:1360px;margin:0 auto;padding:40px}
+.band .ml{color:rgba(250,250,247,.5)}
+.band h3{color:var(--paper)}
+.band .note{color:rgba(250,250,247,.5)}
+.band .lgd{color:rgba(250,250,247,.68)}
+.band .btn{background:transparent;border-color:rgba(250,250,247,.28);color:var(--paper)}
+.band .btn:hover{border-color:var(--paper)}
+.band .tip{background:var(--paper);color:var(--ink)}
+.band .tip .tr .nm{color:var(--ink-2)}
+.band .tip .ev{border-top-color:var(--rule);color:var(--ink-2)}
+.hero-top{display:grid;grid-template-columns:auto 1fr;gap:38px;align-items:end;padding-bottom:28px;
+  border-bottom:1px solid rgba(250,250,247,.14)}
+.hero-gmv .n{font-size:64px;font-weight:780;letter-spacing:-.05em;line-height:1;margin-top:8px}
+.hero-gmv .split{display:flex;gap:22px;margin-top:12px;font-size:13px;color:rgba(250,250,247,.65)}
+.hero-gmv .split b{color:var(--paper);font-weight:660}
+.hchips{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.hchips .c .v{font-size:22px;font-weight:730;letter-spacing:-.035em;margin-top:5px}
+.hgrid{display:grid;grid-template-columns:repeat(4,1fr)}
+.hg{padding:17px 20px 19px;border-right:1px solid rgba(250,250,247,.12);border-bottom:1px solid rgba(250,250,247,.12)}
+.hg:nth-child(4n+1){padding-left:0}
+.hg:nth-child(4n){border-right:none}
+.hg .k{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.hg .v{font-size:21px;font-weight:730;letter-spacing:-.035em}
+.hg .v small{font-size:12.5px;font-weight:620}
+@media(max-width:900px){.hgrid,.hchips{grid-template-columns:repeat(2,1fr)}
+  .hero-top{grid-template-columns:1fr;gap:24px}.hero-gmv .n{font-size:46px}}
+
+/* lists & tables */
+.blist{display:flex;flex-direction:column}
+.br{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--rule)}
+.br:last-child{border-bottom:none}
+.br .rk{font-family:var(--mono);font-size:11px;color:var(--ink-3);width:18px;flex:none}
+.av2{width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:10px;
+  font-weight:660;color:#fff;background:#1F1E19}
+.av2.p{background:#EFC3CB;color:#7A3540}.av2.g{background:#D6D3C6;color:#4A483F}
+.br .un{flex:1;font-size:13.5px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.br .sk{width:70px;height:20px;flex:none}
+.br .vv{font-size:13.5px;font-weight:680;color:var(--money);font-variant-numeric:tabular-nums;min-width:74px;text-align:right}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:11px 13px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--paper);z-index:1;padding-left:0}
+th{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+  background:var(--paper);position:sticky;top:0;z-index:2;border-bottom-color:var(--ink)}
+th.s{cursor:pointer;user-select:none}
+th.s:hover{color:var(--ink)}
+th .ar{opacity:.3;margin-left:3px;font-size:8px}
+th[aria-sort] .ar{opacity:1;color:var(--yellow-ink)}
+td{font-variant-numeric:tabular-nums}
+tbody tr:hover td{background:var(--paper-2)}
+tbody tr:hover td:first-child{background:var(--paper-2)}
+.showcell{display:flex;gap:13px;align-items:flex-start;min-width:270px}
+.thumb{width:38px;height:50px;border-radius:4px;flex:none;background:#1A1913;position:relative;overflow:hidden}
+.thumb::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 34% 26%,rgba(255,224,27,.55),transparent 62%)}
+/* these are spans, so they need display:block for the stacked layout —
+   margin-top alone does nothing on an inline box */
+.showcell .nm{display:block;font-weight:640;white-space:normal;line-height:1.3}
+.showcell .id{display:block;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);margin-top:3px}
+.showcell .du{display:block;font-size:11.5px;color:var(--ink-2);margin-top:1px}
+.tlink{color:var(--link);font-weight:620}
+.cellspark{width:74px;height:22px;display:block;margin-left:auto}
+
+/* bars / bench / recos */
+.hb{display:grid;grid-template-columns:96px 1fr 52px;align-items:center;gap:12px;font-size:12.5px;margin-bottom:10px}
+.hb .l{color:var(--ink-2)}
+.hb .t{height:6px;border-radius:3px;background:#E4E2D6;overflow:hidden}
+.hb .t i{display:block;height:100%;border-radius:3px;background:var(--s1)}
+.hb .v{text-align:right;font-weight:660;font-variant-numeric:tabular-nums}
+.bnr{display:grid;grid-template-columns:118px 1fr 84px;align-items:center;gap:12px;font-size:12.5px;margin-bottom:11px}
+.bnr .l{color:var(--ink-2)}
+.bnr .t{height:7px;border-radius:4px;background:#E4E2D6;overflow:hidden}
+.bnr .t i{display:block;height:100%;border-radius:4px}
+.bnr .v{text-align:right;font-weight:680;font-variant-numeric:tabular-nums}
+.reco{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.reco:last-child{border-bottom:none}
+.reco .ic{width:24px;height:24px;border-radius:6px;background:var(--yellow);display:grid;place-items:center;flex:none;font-size:12px}
+.reco p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.55}
+.reco p b{color:var(--ink);font-weight:660}
+.opp{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.opp:last-child{border-bottom:none}
+.opp .n{font-size:13.5px;font-weight:640}
+.opp .w{font-size:12.5px;color:var(--ink-2);line-height:1.45;grid-column:1}
+.opp .amt{font-size:17px;font-weight:730;color:var(--money);letter-spacing:-.03em;grid-row:1/3;align-self:center;
+  font-variant-numeric:tabular-nums}
+details.disc{border-top:1px solid var(--rule);margin-top:14px}
+details.disc>summary{padding:11px 0 0;font-size:12.5px;font-weight:640;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+details.disc>summary::-webkit-details-marker{display:none}
+details.disc>summary::before{content:"›";font-size:15px;color:var(--ink-3);transition:transform .15s}
+details.disc[open]>summary::before{transform:rotate(90deg)}
+details.disc .db{padding:10px 0 0}
+.setdef{font-family:var(--mono);font-size:10.5px;color:var(--ink-2);background:var(--paper-2);padding:8px 10px;
+  border-radius:6px;line-height:1.6;margin-bottom:12px}
+.uptabs{display:flex;gap:18px;border-bottom:1px solid var(--rule);margin-bottom:16px}
+.uptab{padding:0 0 9px;font-size:12.5px;font-weight:600;color:var(--ink-3);position:relative}
+.uptab[aria-selected="true"]{color:var(--ink)}
+.uptab[aria-selected="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink)}
+.dateinput{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule-2);border-radius:6px;padding:6px 11px;font-size:12.5px}
+.dateinput input{border:none;outline:none;width:82px;font-size:12.5px;font-variant-numeric:tabular-nums;background:none;color:var(--ink)}
+.info{width:12px;height:12px;border-radius:50%;border:1px solid var(--rule-2);color:var(--ink-3);font-size:8px;
+  display:inline-grid;place-items:center;cursor:help;font-weight:700;flex:none}
+.band .info{border-color:rgba(250,250,247,.3);color:rgba(250,250,247,.55)}
+/* modal */
+.mask{position:fixed;inset:0;background:rgba(17,17,16,.5);display:grid;place-items:center;z-index:100;padding:20px}
+.modal{background:var(--paper);border-radius:12px;width:min(880px,100%);max-height:86vh;display:flex;flex-direction:column;overflow:hidden}
+.modal .mh{padding:20px 26px 15px;border-bottom:1px solid var(--rule)}
+.modal .mb{display:grid;grid-template-columns:1.5fr 1fr;overflow:hidden;flex:1;min-height:0}
+.mpick{padding:20px 24px;overflow-y:auto;border-right:1px solid var(--rule)}
+.msel{padding:20px 22px;overflow-y:auto;background:var(--paper-2)}
+.mgrp{margin:18px 0 10px}.mgrp:first-child{margin-top:0}
+.mopts{display:grid;grid-template-columns:1fr 1fr;gap:9px 16px}
+.mopt{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;cursor:pointer;line-height:1.35}
+.mopt .tt{display:block;font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:1px}
+.selrow{display:flex;align-items:center;gap:9px;background:var(--paper);border:1px solid var(--rule);border-radius:6px;
+  padding:8px 11px;font-size:12.5px;margin-bottom:7px}
+.selrow .x{margin-left:auto;color:var(--ink-3);font-size:15px}
+.modal .mf{padding:14px 26px;border-top:1px solid var(--rule);display:flex;justify-content:flex-end;gap:10px}
+.sub16{font-size:12.5px;font-weight:500;color:var(--ink-3)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,14px);background:var(--ink);color:var(--paper);
+  padding:11px 18px;border-radius:8px;font-size:13px;font-weight:580;opacity:0;transition:.18s;z-index:200;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+</style>
+
+<div class="top">
+  <div class="top-in">
+    <span class="wm"><svg viewBox="0 0 24 24"><path d="M2 6l3.2 12h2.6L10 9.6 12.2 18h2.6L18 6h-2.5l-1.9 8.4L11.4 6H8.6L6.4 14.4 4.5 6z"/></svg></span>
+    <span class="crumbs"><b>Seller Hub</b> <span>/</span> <span>Analytics</span></span>
+    <span class="sp"></span>
+    <span class="acct"><span class="av"></span>@hobbybreaks</span>
+  </div>
+  <div class="vtabs" role="tablist">
+    <button class="vtab" role="tab" aria-selected="true" data-v="overall">Overview</button>
+    <button class="vtab" role="tab" aria-selected="false" data-v="shows">Shows</button>
+    <button class="vtab" role="tab" aria-selected="false">Promote</button>
+    <button class="vtab" role="tab" aria-selected="false">Trust &amp; Safety</button>
+  </div>
+</div>
+
+<!-- ═════════ OVERVIEW ═════════ -->
+<section id="v-overall">
+  <div class="mast">
+    <div class="who">
+      <h1>Analytics</h1>
+      <div class="sub"><b>@hobbybreaks</b><span class="sep">·</span>Trading cards
+        <span class="sep">·</span>22 shows in this period</div>
+    </div>
+    <span class="fresh"><span class="pulse"></span>Updated <b>9:47 PM</b>, 4 min after your last show ended</span>
+  </div>
+  <div class="period">
+    <button class="nav" aria-label="Previous">‹</button><button class="nav" aria-label="Next">›</button>
+    <span class="rng">Jul 25 – Aug 8, 2026</span>
+    <button class="btn">Edit dates</button>
+    <span class="sp"></span><span class="note">Pacific Daylight Time</span>
+    <a class="lnk" href="#">What do these metrics mean?</a>
+  </div>
+
+  <div class="spread">
+    <nav class="rail" aria-label="Sections">
+      <ol>
+        <li><a href="#c1" class="on" data-c="c1"><span class="no">01</span><span>How did I do?</span></a></li>
+        <li><a href="#c2" data-c="c2"><span class="no">02</span><span>Who bought from me?</span></a></li>
+        <li><a href="#c3" data-c="c3"><span class="no">03</span><span>Where did they come from?</span></a></li>
+        <li><a href="#c4" data-c="c4"><span class="no">04</span><span>What should I fix?</span></a></li>
+      </ol>
+      <p class="foot">Ordered outcome&nbsp;→&nbsp;cause. The money first, then the reasons behind it.</p>
+    </nav>
+
+    <div class="sheet">
+      <!-- 01 -->
+      <section class="chapter" id="c1">
+        <div class="chead"><h2>How did I do?</h2>
+          <p>The headline result for this period, how it moved, and when it happened.</p></div>
+        <div class="figs" id="figs"></div>
+        <div class="gswitch" id="gswitch" role="group" aria-label="Metric group"></div>
+        <div class="shelf" id="shelf"></div>
+
+        <div class="stack" style="margin-top:36px">
+          <div>
+            <div class="bh"><div class="t"><h3 id="exTitle"></h3>
+              <div class="s" id="exSub"></div></div>
+              <button class="btn" id="exReset">Reset</button>
+              <button class="btn" data-x="Chart data">↓ Export</button></div>
+
+            <!-- plot anything: metric(s) × breakdown × grain × comparison -->
+            <div class="ctrls">
+              <label class="ctrl"><span class="ml">Metric</span>
+                <select id="exM1"></select></label>
+              <label class="ctrl"><span class="ml">Compare metric</span>
+                <select id="exM2"><option value="">— none —</option></select></label>
+              <label class="ctrl"><span class="ml">Break down by</span>
+                <select id="exSplit"></select></label>
+              <label class="ctrl"><span class="ml">Group by</span>
+                <select id="exGrain">
+                  <option value="day">Day</option><option value="week">Week</option>
+                  <option value="month">Month</option><option value="show">Show</option></select></label>
+              <label class="ctrl"><span class="ml">Versus</span>
+                <select id="exCmp"><option value="none">— none —</option>
+                  <option value="prev">Previous period</option></select></label>
+              <span class="sp"></span>
+              <div class="seg" id="exMode"><button aria-pressed="true" data-m="abs">Value</button>
+                <button aria-pressed="false" data-m="pct">Share %</button></div>
+            </div>
+
+            <div class="lgd" id="exLgd" style="margin:14px 0 12px"></div>
+            <div class="cw"><svg class="chart" id="exChart" height="270"></svg><div class="tip" id="exTip"></div></div>
+            <p class="note" id="exNote" style="margin-top:10px"></p>
+            <details class="disc"><summary>Table view</summary><div class="db tw" id="exTable"></div></details>
+          </div>
+
+          <div class="g23">
+            <div>
+              <div class="bh"><div class="t"><h3>When you sell best</h3>
+                <div class="s">GMV by weekday and hour, across the last 90 days. Darker is more.</div></div></div>
+              <div class="cw"><svg class="chart" id="heatChart" height="230"></svg><div class="tip" id="heatTip"></div></div>
+              <p class="note" style="margin-top:10px" id="heatNote"></p>
+            </div>
+            <div>
+              <div class="bh"><div class="t"><h3>GMV per live hour</h3>
+                <div class="s">Efficiency, not volume — corrects for how long you streamed.</div></div></div>
+              <div class="cw"><svg class="chart" id="gphChart" height="230"></svg><div class="tip" id="gphTip"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 -->
+      <section class="chapter" id="c2">
+        <div class="chead"><h2>Who bought from me?</h2>
+          <p>Every buyer cut in one place — who spends the most, how many come back, what they're worth,
+            and who they are.</p></div>
+
+        <div class="g2">
+          <div class="block">
+            <div class="bh"><div class="t"><h3>Top buyers by sales</h3>
+              <div class="s">Sparkline shows their spend with you over 12 weeks.</div></div></div>
+            <div class="blist" id="topSales"></div>
+            <button class="btn wide" style="margin-top:16px" data-x="Top buyers by sales">Export data</button>
+          </div>
+          <div class="block">
+            <div class="bh"><div class="t"><h3>Top buyers by orders</h3>
+              <div class="s">Order count over the same 12 weeks.</div></div></div>
+            <div class="blist" id="topOrders"></div>
+            <button class="btn wide" style="margin-top:16px" data-x="Top buyers by orders">Export data</button>
+          </div>
+        </div>
+
+        <div class="stack" style="margin-top:34px">
+          <div class="g2">
+            <div>
+              <div class="bh"><div class="t"><h3>New vs. returning</h3>
+                <div class="s">Weekly buyer mix. Repeat behaviour is the differentiator.</div></div></div>
+              <div class="lgd" id="mixLgd" style="margin-bottom:12px"></div>
+              <div class="cw"><svg class="chart" id="mixChart" height="220"></svg><div class="tip" id="mixTip"></div></div>
+            </div>
+            <div>
+              <div class="bh"><div class="t"><h3>Do they come back?</h3>
+                <div class="s">Of buyers who first bought in a given month, the share who bought again within N weeks.</div></div></div>
+              <div class="lgd" id="cohortLgd" style="margin-bottom:12px"></div>
+              <div class="cw"><svg class="chart" id="cohortChart" height="220"></svg><div class="tip" id="cohortTip"></div></div>
+            </div>
+          </div>
+
+          <div class="g2">
+            <div>
+              <div class="bh"><div class="t"><h3>What a buyer is worth</h3>
+                <div class="s">Distribution of lifetime spend across your 3,921 buyers.</div></div></div>
+              <div class="cw"><svg class="chart" id="ltvChart" height="220"></svg><div class="tip" id="ltvTip"></div></div>
+              <p class="note" style="margin-top:10px" id="ltvNote"></p>
+            </div>
+            <div>
+              <div class="bh"><div class="t"><h3>Audience profile</h3></div>
+                <div class="seg" id="whoSeg2"><button aria-pressed="true" data-who="viewers">Viewers</button>
+                  <button aria-pressed="false" data-who="buyers">Buyers</button></div></div>
+              <div class="uptabs" role="tablist">
+                <button class="uptab" role="tab" aria-selected="true" data-up="age">Age</button>
+                <button class="uptab" role="tab" aria-selected="false" data-up="region">Region</button>
+                <button class="uptab" role="tab" aria-selected="false" data-up="gender">Gender</button></div>
+              <div id="upBody"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 -->
+      <section class="chapter" id="c3">
+        <div class="chead"><h2>Where did they come from?</h2>
+          <p>How viewers reached you, how many made it through each stage, and which format they bought in.</p></div>
+
+        <div class="stack">
+          <div>
+            <div class="bh"><div class="t"><h3>Traffic mix over time</h3>
+              <div class="s">Share of viewers by surface, weekly.</div></div>
+              <button class="btn" data-x="Traffic mix">↓</button></div>
+            <div class="lgd" id="trafLgd" style="margin-bottom:12px"></div>
+            <div class="cw"><svg class="chart" id="trafChart" height="240"></svg><div class="tip" id="trafTip"></div></div>
+            <p class="note" style="margin-top:10px" id="trafNote"></p>
+          </div>
+
+          <div class="g2">
+            <div>
+              <div class="bh"><div class="t"><h3>Viewer → buyer funnel</h3>
+                <div class="s">Bar width is share kept from the stage above.</div></div></div>
+              <div class="cw"><svg class="chart" id="funChart" height="250"></svg><div class="tip" id="funTip"></div></div>
+            </div>
+            <div>
+              <div class="bh"><div class="t"><h3>Sales by format</h3>
+                <div class="s">Auction, Buy Now and shop as a share of GMV, weekly.</div></div></div>
+              <div class="lgd" id="fmtLgd" style="margin-bottom:12px"></div>
+              <div class="cw"><svg class="chart" id="fmtChart" height="250"></svg><div class="tip" id="fmtTip"></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 -->
+      <section class="chapter" id="c4">
+        <div class="chead"><h2>What should I fix?</h2>
+          <p>Diagnostics rather than results — where the money is leaking, and what it's worth.</p></div>
+
+        <div class="stack">
+          <div class="g2">
+            <div>
+              <div class="bh"><div class="t"><h3>Sell-through</h3>
+                <div class="s">Items sold as a share of items run, per show.</div></div></div>
+              <div class="cw"><svg class="chart" id="stChart" height="220"></svg><div class="tip" id="stTip"></div></div>
+            </div>
+            <div>
+              <div class="bh"><div class="t"><h3>Dead air</h3>
+                <div class="s">Minutes with no bid and no sale, per show.</div></div></div>
+              <div class="cw"><svg class="chart" id="daChart" height="220"></svg><div class="tip" id="daTip"></div></div>
+            </div>
+          </div>
+          <div class="g2">
+            <div class="block plain">
+              <div class="bh"><div class="t"><h3>What stood out</h3>
+                <div class="s">Across your last 22 shows.</div></div></div>
+              <div id="observations"></div>
+            </div>
+            <div class="block">
+              <div class="bh"><div class="t"><h3>Biggest opportunities</h3>
+                <div class="s">Sized against your current run rate.</div></div></div>
+              <div id="opps"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ SHOWS ═════════ -->
+<section id="v-shows" class="hidden">
+  <div class="mast">
+    <div class="who">
+      <h1>Shows</h1>
+      <div class="sub"><b>12 shows</b><span class="sep">·</span>May 11 – Aug 10, 2026
+        <span class="sep">·</span>365-day lookback</div>
+    </div>
+    <span class="fresh"><span class="pulse"></span>Last show ended <b>9:43 PM</b> yesterday</span>
+  </div>
+  <div class="period">
+    <span class="dateinput"><input value="05/11/2026" aria-label="Start"><span style="color:var(--ink-3)">–</span>
+      <input value="08/10/2026" aria-label="End"></span>
+    <div class="seg"><button aria-pressed="false">7d</button><button aria-pressed="false">30d</button>
+      <button aria-pressed="true">90d</button><button aria-pressed="false">365d</button></div>
+    <span class="sp"></span>
+    <button class="btn" id="metricsBtn">✎ Columns</button>
+    <button class="btn" data-x="Shows list">↓ Export</button>
+  </div>
+  <div style="max-width:1360px;margin:0 auto;padding:30px 40px 70px">
+    <div class="tw"><table id="showsTable"></table></div>
+  </div>
+</section>
+
+<!-- ═════════ SHOW DASHBOARD ═════════ -->
+<section id="v-show" class="hidden">
+  <div style="max-width:1360px;margin:0 auto;padding:22px 40px 0;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+    <button class="btn" id="backBtn">‹ All shows</button><span class="sp"></span>
+    <span class="note" id="shMeta"></span>
+    <button class="btn" data-x="Full show recap">↓ Export</button>
+    <button class="btn dark">▶ Replay</button>
+  </div>
+  <div class="mast" style="border-bottom:none">
+    <div class="who"><h1 id="shTitle"></h1><div class="sub" id="shSub"></div></div>
+    <span class="fresh"><span class="pulse"></span>Recap ready <b>4 min</b> after you went offline</span>
+  </div>
+
+  <div class="band"><div class="band-in">
+    <div class="hero-top">
+      <div class="hero-gmv"><div class="ml">Attributed GMV</div>
+        <div class="n" id="heroGmv"></div><div class="split" id="heroSplit"></div></div>
+      <div class="hchips" id="heroChips"></div>
+    </div>
+    <div class="bh" style="margin:26px 0 0;align-items:center">
+      <div class="t"><span class="ml">Key data</span>
+        <span class="ml" style="color:rgba(250,250,247,.35);margin-left:8px" id="heroCount"></span></div>
+      <button class="btn" id="heroCustom">✎ Select metrics</button></div>
+    <div class="hgrid" id="heroGrid"></div>
+
+    <div style="margin-top:38px">
+      <div class="bh"><div class="t"><h3>Run of show</h3>
+        <div class="s" style="color:rgba(250,250,247,.55)">Every minute you were live. Pick up to two metrics;
+          click anywhere to jump to that moment in the replay.</div></div>
+        <div class="seg dk" id="tWin"><button aria-pressed="true" data-w="all">Whole show</button>
+          <button aria-pressed="false" data-w="30">Last 30 min</button>
+          <button aria-pressed="false" data-w="5">Last 5 min</button></div>
+        <button class="btn" data-x="Minute-by-minute">↓</button></div>
+      <div class="seg dk" id="tPick" style="margin-bottom:14px"></div>
+      <div class="lgd" id="tlLgd" style="margin-bottom:12px"></div>
+      <div class="cw"><svg class="chart" id="tlChart" height="300"></svg><div class="tip" id="tlTip"></div></div>
+      <p class="note" style="margin-top:12px">Two panels on one time axis, not two y-scales on one plot.</p>
+    </div>
+  </div></div>
+
+  <div style="max-width:1360px;margin:0 auto;padding:40px 40px 70px">
+    <div class="stack">
+      <div class="g3">
+        <div><div class="bh"><div class="t"><h3>Conversion funnel</h3>
+          <div class="s">This show, stage by stage.</div></div></div>
+          <div class="cw"><svg class="chart" id="shFun" height="240"></svg><div class="tip" id="shFunTip"></div></div></div>
+        <div><div class="bh"><div class="t"><h3>Traffic source</h3>
+          <div class="s">Where the room came from.</div></div></div>
+          <div class="cw"><svg class="chart" id="shDonut" height="240"></svg><div class="tip" id="shDonutTip"></div></div></div>
+        <div><div class="bh"><div class="t"><h3>Buyer mix</h3>
+          <div class="s">First-time vs returning, this show.</div></div></div>
+          <div class="cw"><svg class="chart" id="shMix" height="240"></svg><div class="tip" id="shMixTip"></div></div></div>
+      </div>
+
+      <div class="g23">
+        <div><div class="bh"><div class="t"><h3>Every item that crossed the block</h3>
+          <div class="s">Time sold against price. Bubble size is quantity; colour is format.</div></div>
+          <div class="lgd"><span><i style="background:var(--s1)"></i>Auction</span>
+            <span><i style="background:var(--s2)"></i>Buy Now</span></div></div>
+          <div class="cw"><svg class="chart" id="itemScatter" height="270"></svg><div class="tip" id="itemTip"></div></div></div>
+        <div><div class="bh"><div class="t"><h3>How long they stayed</h3>
+          <div class="s">Watch time distribution.</div></div></div>
+          <div class="cw"><svg class="chart" id="watchChart" height="270"></svg><div class="tip" id="watchTip"></div></div>
+          <p class="note" style="margin-top:10px" id="watchNote"></p></div>
+      </div>
+
+      <div class="g2">
+        <div class="block plain">
+          <div class="bh"><div class="t"><h3>How this show compares</h3>
+            <div class="s">Against your own history, in GMV per live hour.</div></div></div>
+          <div id="benchRows"></div>
+          <details class="disc"><summary>Compare against peers</summary><div class="db">
+            <div class="setdef">comparison set — trading cards · L90 GMV $1M–$2M<br>· US sellers · n = 214 · updated weekly</div>
+            <div id="peerRows"></div></div></details>
+        </div>
+        <div class="block plain">
+          <div class="bh"><div class="t"><h3>What to try next time</h3></div></div>
+          <div id="shReco"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="bh"><div class="t"><h3>Giveaway impact</h3>
+          <div class="s">Viewers and orders per minute during each giveaway, against the ten minutes before it.</div></div>
+          <div class="lgd"><span><i style="background:var(--rule-2)"></i>10 min before</span>
+            <span><i style="background:var(--s1)"></i>During</span></div>
+          <button class="btn" data-x="Giveaway impact">↓</button></div>
+        <div class="cw"><svg class="chart" id="giveChart" height="210"></svg><div class="tip" id="giveTip"></div></div>
+        <p class="note" style="margin-top:10px">Compared to the ten minutes preceding, not a controlled baseline —
+          read it as direction, not attribution.</p>
+      </div>
+
+      <div class="g2">
+        <div class="block plain"><div class="bh"><div class="t"><h3>Audience profile</h3></div>
+          <div class="seg" id="whoSeg"><button aria-pressed="true" data-who="viewers">Viewers</button>
+            <button aria-pressed="false" data-who="buyers">Buyers</button></div></div>
+          <div class="uptabs" role="tablist">
+            <button class="uptab" role="tab" aria-selected="true" data-sp="age">Age</button>
+            <button class="uptab" role="tab" aria-selected="false" data-sp="region">Region</button>
+            <button class="uptab" role="tab" aria-selected="false" data-sp="gender">Gender</button></div>
+          <div id="spBody"></div></div>
+        <div class="block plain"><div class="bh"><div class="t"><h3>Traffic source detail</h3></div></div>
+          <div class="tw"><table class="tsrc" id="shTsrc" style="font-size:12.5px"></table></div></div>
+      </div>
+
+      <div>
+        <div class="bh"><div class="t"><h3>Items run</h3>
+          <div class="s">Sorted by GMV. Sparkline is bids over the item's time on the block.</div></div>
+          <div class="seg"><button aria-pressed="true">Auction 1,631</button><button aria-pressed="false">Buy Now 374</button></div>
+          <button class="btn" data-x="Item list">↓</button></div>
+        <div class="tw"><table id="prodTable"></table></div>
+      </div>
+
+      <div>
+        <div class="bh"><div class="t"><h3>Buyers on this show</h3>
+          <div class="s">Lifetime spend and order history with you.</div></div>
+          <button class="btn" data-x="Buyer list">↓ Export buyers</button></div>
+        <div class="tw"><table id="buyerTable"></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="mask hidden" id="mask">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Choose metrics">
+    <div class="mh"><h3 style="font-size:17px" id="mTitle"></h3></div>
+    <div class="mb"><div class="mpick" id="mpick"></div>
+      <div class="msel"><div class="ml" style="margin-bottom:12px" id="selCount"></div><div id="selList"></div></div></div>
+    <div class="mf"><button class="btn" id="mCancel">Cancel</button><button class="btn dark" id="mApply">Apply</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const NS="http://www.w3.org/2000/svg";
+const el=(n,a={})=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e};
+const C=n=>getComputedStyle(document.body).getPropertyValue(n).trim();
+const lcg=s=>{let x=s>>>0;return()=>((x=(x*1664525+1013904223)>>>0)/4294967296)};
+const fmt={
+  usd:v=>"$"+Math.round(v).toLocaleString("en-US"),
+  usd2:v=>"$"+v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}),
+  usdk:v=>v>=1000?"$"+(v/1000).toFixed(v>=10000?0:1)+"k":"$"+Math.round(v),
+  num:v=>Math.round(v).toLocaleString("en-US"),
+  k:v=>v>=1000?(v/1000).toFixed(2)+"K":String(Math.round(v)),
+  pct:v=>v.toFixed(1)+"%",
+  dur:m=>Math.floor(m/60)+"h "+String(m%60).padStart(2,"0")+"m"
+};
+const N2=(v,d=2)=>v.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const bigsmall=s=>{const m=String(s).match(/^([^.]*)(\..*)$/);return m?`${m[1]}<small>${m[2]}</small>`:s};
+let tm;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");
+  clearTimeout(tm);tm=setTimeout(()=>t.classList.remove("on"),2600)}
+
+/* ═══════════ shared chart plumbing ═══════════ */
+function ticks(max,n=4){const st=Math.pow(10,Math.floor(Math.log10(max/n||1)));
+  const e=max/n/st,m=e>=7.5?10:e>=3.5?5:e>=1.5?2:1,s=st*m,o=[];
+  for(let v=0;v<=max*1.001;v+=s)o.push(v);return o}
+function axes(svg,x0,x1,y1,tk,f,dark){
+  tk.forEach(t=>{svg.appendChild(el("line",{x1:x0,x2:x1,y1:t.y,y2:t.y,
+    stroke:dark?"rgba(250,250,247,.12)":C("--grid"),"stroke-width":1}));
+    const l=el("text",{x:x0-9,y:t.y+3.5,"text-anchor":"end",fill:dark?"rgba(250,250,247,.45)":C("--ink-3"),
+      "font-size":10.5,"font-family":C("--sans")});
+    l.style.fontVariantNumeric="tabular-nums";l.textContent=f(t.v);svg.appendChild(l)});
+  svg.appendChild(el("line",{x1:x0,x2:x1,y1,y2:y1,stroke:dark?"rgba(250,250,247,.22)":C("--rule-2"),"stroke-width":1}));
+}
+function xlab(svg,x,y,txt,dark){const t=el("text",{x,y,"text-anchor":"middle",
+  fill:dark?"rgba(250,250,247,.45)":C("--ink-3"),"font-size":10.5,"font-family":C("--sans")});
+  t.textContent=txt;svg.appendChild(t);return t}
+function dlabel(svg,x,y,txt,col){const t=el("text",{x,y,"text-anchor":"middle",fill:col||C("--ink-2"),
+  "font-size":10.5,"font-weight":660,"font-family":C("--sans")});
+  t.style.fontVariantNumeric="tabular-nums";t.textContent=txt;svg.appendChild(t);return t}
+function mkTip(tipSel,svgSel){const tip=$(tipSel),svg=$(svgSel);
+  return{show(html,cx,top){tip.innerHTML=html;tip.style.opacity=1;
+    const tw=tip.offsetWidth,W=svg.clientWidth;
+    tip.style.left=Math.min(Math.max(cx-tw/2,0),Math.max(0,W-tw))+"px";tip.style.top=(top||0)+"px"},
+   hide(){tip.style.opacity=0}}}
+const row=(c,n,v)=>`<div class="tr"><span class="nm"><i style="background:${c}"></i>${n}</span><b>${v}</b></div>`;
+
+/* sparkline into an <svg> host */
+function spark(host,vals,col,h){
+  const w=100,H=h||24,mx=Math.max(...vals),mn=Math.min(...vals),rg=(mx-mn)||1;
+  const svg=el("svg",{viewBox:`0 0 ${w} ${H}`,preserveAspectRatio:"none"});
+  svg.setAttribute("style","width:100%;height:100%;display:block;overflow:visible");
+  const pt=i=>[i/(vals.length-1)*w,H-2-((vals[i]-mn)/rg)*(H-5)];
+  const d=vals.map((v,i)=>{const[x,y]=pt(i);return(i?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)}).join(" ");
+  svg.appendChild(el("path",{d,fill:"none",stroke:col,"stroke-width":1.6,"stroke-linejoin":"round",
+    "vector-effect":"non-scaling-stroke"}));
+  const[lx,ly]=pt(vals.length-1);
+  svg.appendChild(el("circle",{cx:lx-1,cy:ly,r:2,fill:col}));
+  host.innerHTML="";host.appendChild(svg);
+}
+
+/* ═══════════ data ═══════════ */
+const R=lcg(20260810);
+const D90=[];{const start=new Date(2026,4,11);
+ for(let i=0;i<90;i++){const d=new Date(start);d.setDate(start.getDate()+i);
+   const dow=d.getDay(),live=dow!==2&&dow!==3&&R()>0.18;
+   const base=live?(46000+R()*90000)*(dow===1?1.22:dow===5?1.1:1):(2000+R()*9000);
+   const show=base*(1+i/90*0.18),mkt=show*(0.05+R()*0.09);
+   const orders=Math.round((show+mkt)/(52+R()*14));
+   D90.push({d,lab:d.toLocaleDateString("en-US",{month:"short",day:"numeric"}),dow,live,show,mkt,orders,
+     hours:live?(1.8+R()*2.2):0});
+ }}
+const HOURS_LIVE=57.2;
+const win=n=>D90.slice(-n);
+const T={};(function(){const w=win(15);
+  T.gmv=w.reduce((a,b)=>a+b.show+b.mkt,0);T.orders=w.reduce((a,b)=>a+b.orders,0);
+  T.aov=T.gmv/T.orders;T.gph=T.gmv/HOURS_LIVE})();
+
+/* day × hour heatmap */
+const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],HRS=[15,16,17,18,19,20,21,22,23];
+const HEAT=[];{const r=lcg(31);
+ DOW.forEach((_,di)=>{HRS.forEach(h=>{
+   const peak=(h>=19&&h<=21)?1.9:(h>=17&&h<=22)?1.25:0.45;
+   const dayw=di===1?1.5:di===5?1.3:di===6?1.2:di===2||di===3?0.35:0.9;
+   HEAT.push({d:di,h,v:Math.round(peak*dayw*(9000+r()*14000))})})})}
+
+const WK12=Array.from({length:12},(_,i)=>{const d=new Date(2026,7,8);d.setDate(d.getDate()-(11-i)*7);
+  return d.toLocaleDateString("en-US",{month:"short",day:"numeric"})});
+const MIX=(()=>{const r=lcg(77);return WK12.map((w,i)=>{
+  const ret=620+i*38+r()*90,nw=520+i*20+r()*80,cat=95+i*7+r()*30;
+  return{w,ret,nw,cat}})})();
+const COHORT=(()=>{const r=lcg(88);
+  return[{m:"May cohort",c:"--s1",v:[100,41,52,58,62,65,67]},
+         {m:"Jun cohort",c:"--s2",v:[100,46,58,64,68,70,null]},
+         {m:"Jul cohort",c:"--s3",v:[100,52,64,70,null,null,null]}]})();
+const LTV=[{l:"$0–50",v:1284},{l:"$50–150",v:964},{l:"$150–400",v:712},{l:"$400–1k",v:521},
+  {l:"$1k–5k",v:338},{l:"$5k+",v:102}];
+const TRAF=[{k:"fyf",l:"For You feed",c:"--s1"},{k:"fol",l:"Following",c:"--s2"},
+  {k:"srch",l:"Search",c:"--s3"},{k:"notif",l:"Notifications",c:"--s4"},{k:"link",l:"Shared link",c:"--s5"}];
+const TRAFW=(()=>{const r=lcg(55);return WK12.map((w,i)=>({w,
+  fyf:44+Math.sin(i/3)*4+r()*3, fol:22+i*0.35+r()*2.5, srch:16-i*0.2+r()*2,
+  notif:11+r()*2, link:6+r()*1.6}))})();
+const FMT=[{k:"auc",l:"Live auction",c:"--s1"},{k:"bin",l:"Live Buy Now",c:"--s2"},
+  {k:"shop",l:"Profile shop",c:"--s3"},{k:"mkt",l:"Marketplace",c:"--s4"}];
+const FMTW=(()=>{const r=lcg(66);return WK12.map((w,i)=>({w,
+  auc:58+Math.sin(i/4)*3+r()*2, bin:24+i*0.2+r()*2, shop:11+r()*1.5, mkt:5+r()*1.2}))})();
+const FUNNEL=[{l:"Impressions",v:1284000},{l:"Entered a show",v:284000},{l:"Viewed an item",v:118940},
+  {l:"Bid or tapped buy",v:31210},{l:"Ordered",v:24672}];
+
+const NAMES=["Monday Night Mega Break — PSA Slabs & Wax","Vintage Basketball Rip Night",
+  "Football Friday — Prizm & Optic","Sunday Slab Showcase","Pokémon Crossover Special","Hobby Box Blowout",
+  "Rookie Card Roulette","Late Night Wax Session","Grail Hunt — High End Only","Weekend Warm-Up Break",
+  "Trade Night — Community Picks","Chrome Chase Marathon"];
+const RS=lcg(991);
+const shows=NAMES.map((nm,i)=>{
+  const d=new Date(2026,7,10);d.setDate(d.getDate()-i*3-Math.floor(RS()*2));
+  const dur=Math.round(95+RS()*105),gmv=42000+RS()*95000,aov=48+RS()*20;
+  const orders=Math.round(gmv/aov),viewers=Math.round(orders*(4.6+RS()*3));
+  const items=Math.round(orders*(1.18+RS()*0.34));
+  return{nm,date:d,dur,gmv,orders,aov,viewers,items,
+    ccv:Math.round(viewers*(.11+RS()*.07)),buyers:Math.round(orders*(.6+RS()*.08)),
+    newPct:26+RS()*38,foll:Math.round(60+RS()*380),dead:Math.round(6+RS()*22),
+    id:"78"+String(Math.floor(RS()*1e14)).padStart(14,"0"),
+    trend:Array.from({length:8},()=>0.6+RS()*0.8)};
+});
+const H={dur:161,gmv:118432.55,orders:2005,aov:118432.55/2005,viewers:18470,ccv:2549,buyers:1284,
+  newPct:58.6,foll:412,items:2680,dead:17,auction:96182.20,bin:22250.35};
+Object.assign(shows[0],H);shows[0].date=new Date(2026,7,10);
+shows.forEach(s=>s.sell=s.orders/s.items*100);
+const HGPH=H.gmv/(H.dur/60),H_IMPR=1823400;
+
+const TLN=161,RT=lcg(4242),tl=[];
+for(let m=0;m<TLN;m++){
+  const ramp=Math.min(1,m/18),tail=m>TLN-14?(TLN-m)/14:1;
+  const wave=1+.42*Math.sin(m/17)+.25*Math.sin(m/6.5),hot=(m>68&&m<93)?1.9:1;
+  const ccv=Math.max(4,Math.round(1400*ramp*tail*wave*(hot>1?1.35:1)+RT()*340));
+  const orders=Math.max(0,Math.round(9*ramp*tail*wave*hot+RT()*5));
+  tl.push({m,ccv,orders,gmv:Math.round(orders*(44+RT()*34)),
+    impr:Math.round(ccv*(5.6+RT()*2.4)),foll:Math.max(0,Math.round(RT()*6*ramp*tail)),
+    bids:Math.max(0,Math.round(orders*(2.1+RT()*2.4)))});
+}
+const EVT={pin:{s:"circle",l:"Pinned item"},give:{s:"diamond",l:"Giveaway"},promo:{s:"square",l:"Promotion"}};
+const evGlyph={circle:"●",diamond:"◆",square:"■"};
+const EV=[{m:12,k:"give",t:"Giveaway — 1 of 1 auto patch"},{m:41,k:"pin",t:"Pinned: 2023 Prizm hobby box"},
+  {m:70,k:"pin",t:"PSA rookie run starts"},{m:88,k:"promo",t:"Grail drop: Wembanyama RPA /25"},
+  {m:104,k:"pin",t:"Raw wax block"},{m:126,k:"give",t:"Giveaway — buyer bundle"},
+  {m:141,k:"promo",t:"Last call — bundle discount"}];
+const TREND={ccv:{l:"Concurrent viewers",c:"--s1",fmt:fmt.num,kind:"line"},
+  orders:{l:"Orders per minute",c:"--s2",fmt:fmt.num,kind:"bar"},
+  gmv:{l:"GMV per minute",c:"--s2",fmt:v=>"$"+fmt.num(v),kind:"bar"},
+  bids:{l:"Bids per minute",c:"--s3",fmt:fmt.num,kind:"bar"},
+  impr:{l:"Impressions",c:"--s4",fmt:fmt.num,kind:"line"},
+  foll:{l:"Followers gained",c:"--s5",fmt:fmt.num,kind:"bar"}};
+let tSel=["ccv","gmv"],tWin="all";
+
+/* show-level breakdowns */
+const SH_FUNNEL=[{l:"Impressions",v:1823400},{l:"Entered show",v:18470},{l:"Viewed an item",v:9840},
+  {l:"Bid or tapped buy",v:3120},{l:"Ordered",v:2005}];
+const SH_TRAF=[["For You feed",41.20,49.10,44.02],["Following",27.14,21.80,28.31],["Search",14.06,12.44,10.19],
+  ["Notifications",11.32,10.11,12.06],["Shared link",6.28,6.55,5.42]];
+const SH_DONUT=[{l:"For You feed",v:41.2,c:"--s1"},{l:"Following",v:27.1,c:"--s2"},
+  {l:"Search",v:14.1,c:"--s3"},{l:"Other",v:17.6,c:"--rule-2"}];
+const SH_BUYMIX=[{l:"Returning",v:41.4,c:"--s1"},{l:"New to you",v:44.2,c:"--s2"},
+  {l:"New to category",v:14.4,c:"--s3"}];
+const WATCH=[{l:"<30s",v:6840},{l:"30s–2m",v:4210},{l:"2–5m",v:3180},{l:"5–15m",v:2410},
+  {l:"15–45m",v:1320},{l:"45m+",v:510}];
+const ITEMS=(()=>{const r=lcg(404);const out=[];
+  for(let i=0;i<86;i++){const t=6+r()*152,auc=r()>0.22;
+    out.push({t:Math.round(t),p:auc?(18+Math.pow(r(),2.4)*1400):(25+r()*260),
+      q:1+Math.floor(Math.pow(r(),2)*9),auc})}return out})();
+const PRODS=[["2023 Prizm Football Hobby Box",78,19344,248,"8:14 PM"],
+  ["Mystery Slab — $50 tier",214,10700,50,"7:41 PM"],["PSA 10 Wembanyama Prizm RC",6,8700,1450,"8:29 PM"],
+  ["2024 Topps Chrome Jumbo",61,8052,132,"9:02 PM"],["Vintage 1986 Fleer Repack",143,6006,42,"9:18 PM"],
+  ["Bowman Chrome Auto Break",44,5324,121,"8:47 PM"],["Panini Select Hanger Lot",96,4128,43,"7:58 PM"]];
+/* Invented handles. Value distributions are kept realistic, but no real
+   buyer identity appears anywhere in this file. */
+const BUYERS=[["slabvaultco",34,4218,91041,393,"Aug 06"],["rippedandgraded",29,3640,82867.75,621,"Aug 09"],
+  ["corner_case_cards",22,2914,65362,429,"Aug 09"],["thepatchhunter",17,2106,55107,368,"Aug 04"],
+  ["mint_or_bust",14,1702,46563.10,439,"Aug 06"],["waxwednesday",9,1088,40055,214,"Aug 01"],
+  ["gemrate10",7,842,35909.19,188,"Jul 29"],["firstpull",2,198,198,1,"—"]];
+const TOP_SALES=[["slabvaultco",91041,""],["rippedandgraded",82867.75,"p"],["corner_case_cards",65362,""],
+  ["thepatchhunter",55107,""],["dugout_finds",48147.64,""],["mint_or_bust",46563.10,""],
+  ["chromechaser",45397,""],["waxwednesday",40055,"p"],["gemrate10",35909.19,"g"],["rookiewatch",25417.25,""]];
+const TOP_ORDERS=[["rippedandgraded",621,"p"],["boxbreakbetty",460,""],["mint_or_bust",439,""],
+  ["corner_case_cards",429,""],["chromechaser",418,""],["slabvaultco",393,""],["penny_sleeves",371,"g"],
+  ["thepatchhunter",368,""],["shoeboxlegends",350,""],["autochaser88",318,"p"]];
+
+/* ═══════════ metric catalogue — every value populated ═══════════ */
+const CATALOG=[
+  {g:"Transaction",k:"gmv",l:"GMV",v:N2(H.gmv),tt:"Attributed GMV"},
+  {g:"Transaction",k:"earn",l:"Estimated earnings",v:N2(H.gmv*.849),
+    tip:"After Whatnot fees and payment processing. Excludes your COGS and shipping."},
+  {g:"Transaction",k:"buyers",l:"Unique buyers",v:fmt.num(H.buyers),tt:"Customers"},
+  {g:"Transaction",k:"orders",l:"Orders",v:fmt.num(H.orders),tt:"Orders"},
+  {g:"Transaction",k:"aov",l:"AOV",v:N2(H.aov),tt:"Avg. Price (Main orders)"},
+  {g:"Transaction",k:"auc",l:"Auction GMV",v:N2(H.auction)},
+  {g:"Transaction",k:"bin",l:"Buy Now GMV",v:N2(H.bin)},
+  {g:"Transaction",k:"items",l:"Items sold",v:fmt.num(H.orders),tt:"Created SKU orders"},
+  {g:"Transaction",k:"refund",l:"Refund rate",v:"2.10%"},
+  {g:"Traffic efficiency",k:"impr",l:"Impressions",v:(H_IMPR/1e6).toFixed(2)+"M"},
+  {g:"Traffic efficiency",k:"views",l:"Views",v:fmt.num(H.viewers),tt:"Views"},
+  {g:"Traffic efficiency",k:"gpm",l:"Show GPM",v:N2(H.gmv/H_IMPR*1000),tip:"GMV per 1,000 impressions.",tt:"Show GPM"},
+  {g:"Traffic efficiency",k:"iph",l:"Impressions / hour",v:(H_IMPR/(H.dur/60)/1000).toFixed(2)+"K"},
+  {g:"Traffic efficiency",k:"enter",l:"Enter show rate",v:"1.01%",tt:"Enter room rate"},
+  {g:"Traffic efficiency",k:"watch",l:"Avg. watch time",v:"4m 12s",tt:"Avg. viewing duration"},
+  {g:"Traffic efficiency",k:"wgpm",l:"Watch GPM",v:"91.40",tt:"Watch GPM"},
+  {g:"Traffic efficiency",k:"pimp",l:"Item impressions",v:"412.80K",tt:"Product Impressions"},
+  {g:"Traffic efficiency",k:"ptap",l:"Item taps",v:fmt.num(31240),tt:"Product clicks"},
+  {g:"Traffic efficiency",k:"ctr",l:"Show CTR",v:"7.57%",tt:"CTR"},
+  {g:"Traffic efficiency",k:"ctor",l:"Tap-to-order rate",v:"6.42%",tt:"CTOR"},
+  {g:"Traffic efficiency",k:"v1m",l:"Views over 1 min",v:fmt.num(9420),tt:">1 min. views"},
+  {g:"Interactions",k:"foll",l:"Followers gained",v:fmt.num(H.foll),tt:"New followers"},
+  {g:"Interactions",k:"frate",l:"Follow rate",v:N2(H.foll/H.viewers*100)+"%"},
+  {g:"Interactions",k:"comm",l:"Comments",v:fmt.num(11840),tt:"Comments"},
+  {g:"Interactions",k:"crate",l:"Comment rate",v:"64.10%"},
+  {g:"Interactions",k:"share",l:"Shares",v:fmt.num(1284),tt:"Shares"},
+  {g:"Interactions",k:"like",l:"Likes",v:fmt.num(48210),tt:"Likes"},
+  {g:"Audience",k:"ccv",l:"Peak concurrent",v:fmt.num(H.ccv)},
+  {g:"Audience",k:"ret",l:"Returning buyer rate",v:N2(100-H.newPct)+"%"},
+  {g:"Audience",k:"newyou",l:"New to you",v:fmt.num(Math.round(H.buyers*H.newPct/100))},
+  {g:"Audience",k:"opb",l:"Orders per buyer",v:N2(H.orders/H.buyers)},
+  {g:"Audience",k:"newcat",l:"New to category",v:fmt.num(185)},
+  {g:"Audience",k:"bid",l:"Bidders",v:fmt.num(4218)},
+  {g:"Pace",k:"gph",l:"GMV per hour",v:N2(HGPH)},
+  {g:"Pace",k:"oph",l:"Orders / hour",v:N2(H.orders/(H.dur/60),1)},
+  {g:"Pace",k:"sell",l:"Sell-through",v:N2(H.orders/H.items*100)+"%"},
+  {g:"Pace",k:"dead",l:"Dead air",v:H.dead+" min"},
+  {g:"Pace",k:"itemsrun",l:"Items run",v:fmt.num(H.items)},
+  {g:"Ads",k:"roas",l:"Ads ROAS",v:"4.12",tt:"Ads ROAS"},
+  {g:"Ads",k:"acost",l:"Ads cost",v:N2(2840)},
+  {g:"Ads",k:"agmv",l:"Ads GMV",v:N2(11700)},
+  {g:"Ads",k:"aord",l:"Ads orders",v:fmt.num(198),tt:"Ads SKU Orders"}
+];
+const CAT=Object.fromEntries(CATALOG.map(m=>[m.k,m]));
+let HERO_SEL=["gmv","earn","orders","aov","buyers","gph","impr","gpm","views","ret","sell","oph"];
+
+const FIGS=[
+  {ml:"Estimated sales",v:fmt.usd(T.gmv),d:+14.2,sub:"Estimated earnings "+fmt.usd(T.gmv*.849),
+   sk:win(15).map(x=>x.show+x.mkt)},
+  {ml:"Buyers",v:"3,921",d:+11.4,sub:"116 avg / day",sk:win(15).map(x=>x.orders*0.62)},
+  {ml:"Max concurrent viewers",v:"2,549",d:+12.0,sub:"41,208 unique viewers",
+   sk:win(15).map(x=>x.live?x.show/48:200)}
+];
+const GROUPS=[
+  {key:"sales",label:"Sales",items:[
+    {l:"Estimated sales",v:fmt.usd2(T.gmv),d:+14.2},{l:"Estimated earnings",v:fmt.usd2(T.gmv*.849),d:+13.6},
+    {l:"Orders",v:fmt.num(T.orders),d:+9.8},{l:"Average order value",v:fmt.usd2(T.aov),d:+4.1},
+    {l:"GMV per live hour",v:fmt.usd(T.gph),d:+6.9},{l:"Refund rate",v:"2.4%",d:-0.3,good:"down"},
+    {l:"Auction share",v:"58.4%",d:+1.8},{l:"Sell-through",v:"76.8%",d:-2.1,good:"up"}]},
+  {key:"buyers",label:"Buyers",items:[
+    {l:"Unique buyers",v:"3,921",d:+11.4},{l:"Repeat buyer rate",v:"46.2%",d:+3.8},
+    {l:"New to you",v:"2,109",d:+18.1},{l:"New to category",v:"418",d:+9.2},
+    {l:"Buyers per show",v:"178",d:+2.2},{l:"Lifetime value (L12m)",v:"$412",d:+7.4},
+    {l:"Bidders",v:"9,840",d:+14.6},{l:"Orders per buyer",v:"1.56",d:+1.1}]},
+  {key:"audience",label:"Audience",items:[
+    {l:"Max concurrent",v:"2,549",d:+12.0},{l:"Unique viewers",v:"41,208",d:+21.7},
+    {l:"Impressions",v:"12.84M",d:+18.4},{l:"Avg. watch time",v:"3m 51s",d:+6.2},
+    {l:"Enter show rate",v:"2.21%",d:+0.4},{l:"Followers gained",v:"1,347",d:+24.3},
+    {l:"Comments",v:"84.2K",d:+11.9},{l:"Shares",v:"9,104",d:+7.7}]},
+  {key:"pace",label:"Pace",items:[
+    {l:"Shows",v:"22",d:+2,raw:true},{l:"Hours live",v:"57.2",d:+5.1},
+    {l:"Orders / hour",v:"431",d:+4.5},{l:"Items run",v:"32,104",d:+8.8},
+    {l:"Dead air per show",v:"14 min",d:-11.0,good:"down"},{l:"Longest gap",v:"4m 20s",d:-8.0,good:"down"},
+    {l:"Avg. show length",v:"2h 36m",d:+3.1},{l:"Auction win rate",v:"88.4%",d:+1.4}]}
+];
+let gsel="sales";
+const UP={viewers:{age:[["18–24",11.4],["25–34",38.2],["35–44",27.6],["45+",22.8]],
+   region:[["California",16.9],["Texas",10.8],["Florida",9.1],["New York",7.4],["Other",55.8]],
+   gender:[["Male",71.2],["Female",26.4],["Undisclosed",2.4]]},
+ buyers:{age:[["18–24",4.6],["25–34",40.9],["35–44",30.2],["45+",24.3]],
+   region:[["California",18.2],["Texas",11.4],["Florida",9.7],["New York",7.1],["Other",53.6]],
+   gender:[["Male",74.8],["Female",23.1],["Undisclosed",2.1]]}};
+let who="viewers",who2="viewers";
+
+const OBS=[["↑","<b>Monday nights are your best slot</b> — $44.1k per live hour against $36.9k on every other weekday."],
+  ["◇","<b>Repeat buyer rate rose 3.8 pts</b> to 46%. A year ago it was 31%."],
+  ["↓","<b>Your three weakest shows all opened on raw wax.</b> Your strongest opened on graded slabs."],
+  ["⏱","<b>Dead air fell 11%</b> to 14 minutes a show, worth roughly $9.1k of recovered run time."]];
+const OPPS=[["Cut dead air to 8 minutes","You average 14 min of silence per show. Getting to your best show's 8 min, at your current $431/hr order rate.","$41,200 / mo"],
+  ["Move two Thursday shows to Monday","Monday runs 19% ahead of Thursday on GMV per live hour, at the same audience size.","$28,400 / mo"],
+  ["Lift sell-through to 82%","You run 32.1k items and sell 76.8%. Your best five shows average 82%.","$19,800 / mo"],
+  ["Re-engage 412 lapsed buyers","Bought 3+ times, nothing in 60 days. At their historic $412 lifetime value.","$14,100 one-off"]];
+const SH_RECO=[["↑","<b>Your 8:10–8:35 PM stretch did 3.1× your show average.</b> That block was PSA-graded rookies; your two slowest stretches both ran raw wax."],
+  ["⏱","<b>17 minutes of dead air</b> across 6 gaps over 90 seconds — roughly <b>$12,500</b> at your orders per hour."],
+  ["◎","<b>Sell-through was 74.8%</b> — 2,680 run, 2,005 sold. Your last five shows averaged 81%."],
+  ["◇","<b>The 9:08 PM giveaway lifted orders 26%</b> for eight minutes and gained you 23 followers."]];
+
+/* ═══════════ charts ═══════════ */
+/* ═══════════════════════════════════════════════════════════════════
+   THE EXPLORER — plot any metric, broken down any way, at any grain.
+   "Sales over time" is just its default state (GMV, daily, by channel),
+   so the generic tool and the default chart are the same object.
+   Chart form is DERIVED from the selection rather than being another
+   dropdown to reason about — see pickForm().
+   ═══════════════════════════════════════════════════════════════════ */
+const EXR=lcg(2026);const jit=[];for(let i=0;i<400;i++)jit.push(0.94+EXR()*0.12);
+const EXM={
+  gmv:      {l:"GMV",              u:"money", agg:"sum", f:d=>d.show+d.mkt},
+  earnings: {l:"Estimated earnings",u:"money",agg:"sum", f:d=>(d.show+d.mkt)*0.849},
+  orders:   {l:"Orders",           u:"count", agg:"sum", f:d=>d.orders},
+  buyers:   {l:"Buyers",           u:"count", agg:"sum", f:d=>Math.round(d.orders*0.62)},
+  aov:      {l:"Average order value",u:"money",agg:"avg",f:d=>(d.show+d.mkt)/Math.max(1,d.orders)},
+  viewers:  {l:"Unique viewers",   u:"count", agg:"sum", f:d=>Math.round((d.show+d.mkt)/(d.live?6.4:2))},
+  ccv:      {l:"Peak concurrent",  u:"count", agg:"avg", f:d=>d.live?Math.round((d.show+d.mkt)/6.4*0.14):0},
+  followers:{l:"Followers gained", u:"count", agg:"sum", f:d=>d.live?Math.round((d.show+d.mkt)/6.4*0.022):0},
+  impr:     {l:"Impressions",      u:"count", agg:"sum", f:d=>Math.round((d.show+d.mkt)/(d.live?6.4:2)*44)},
+  gph:      {l:"GMV per live hour",u:"money", agg:"avg", f:d=>d.hours?(d.show+d.mkt)/d.hours:0},
+  oph:      {l:"Orders per hour",  u:"count", agg:"avg", f:d=>d.hours?d.orders/d.hours:0},
+  watch:    {l:"Avg. watch time",  u:"mins",  agg:"avg", f:(d,i)=>3.1*jit[i%400]},
+  sell:     {l:"Sell-through",     u:"pct",   agg:"avg", f:(d,i)=>77*jit[i%400]},
+  refund:   {l:"Refund rate",      u:"pct",   agg:"avg", f:(d,i)=>2.3*jit[i%400]},
+  bidders:  {l:"Bidders",          u:"count", agg:"sum", f:d=>Math.round(d.orders*2.1)},
+  comments: {l:"Comments",         u:"count", agg:"sum", f:d=>Math.round((d.show+d.mkt)/(d.live?6.4:2)*2.05)}
+};
+const EXS={
+  none:   {l:"Nothing",       parts:null},
+  channel:{l:"Sales channel", parts:[{k:"Show",w:.88,c:"--s1"},{k:"Marketplace",w:.12,c:"--s2"}]},
+  format: {l:"Format",        parts:[{k:"Live auction",w:.58,c:"--s1"},{k:"Live Buy Now",w:.24,c:"--s2"},
+             {k:"Profile shop",w:.11,c:"--s3"},{k:"Marketplace",w:.07,c:"--s4"}]},
+  traffic:{l:"Traffic source", parts:[{k:"For You feed",w:.44,c:"--s1"},{k:"Following",w:.22,c:"--s2"},
+             {k:"Search",w:.16,c:"--s3"},{k:"Notifications",w:.11,c:"--s4"},{k:"Shared link",w:.07,c:"--s5"}]},
+  buyer:  {l:"Buyer type",    parts:[{k:"Returning",w:.46,c:"--s1"},{k:"New to you",w:.42,c:"--s2"},
+             {k:"New to category",w:.12,c:"--s3"}]}
+};
+let EX={m1:"gmv",m2:"",split:"channel",grain:"day",cmp:"none",mode:"abs"};
+
+const unitFmt=u=>u==="money"?fmt.usdk:u==="pct"?(v=>v.toFixed(0)+"%"):
+  u==="mins"?(v=>v.toFixed(1)+"m"):fmt.num;
+const unitFull=u=>u==="money"?fmt.usd:u==="pct"?(v=>v.toFixed(1)+"%"):
+  u==="mins"?(v=>v.toFixed(1)+" min"):fmt.num;
+
+/* bucket the 90 days into the chosen grain */
+function buckets(grain,days){
+  if(grain==="show")return days.filter(d=>d.live).map((d,i)=>({lab:d.lab,rows:[d],i}));
+  if(grain==="day") return days.map((d,i)=>({lab:d.lab,rows:[d],i}));
+  const out=[],size=grain==="week"?7:30;
+  for(let i=0;i<days.length;i+=size){const rows=days.slice(i,i+size);
+    out.push({lab:rows[0].lab,rows,i:out.length})}
+  return out;
+}
+function aggregate(bucket,key,baseIdx){
+  const m=EXM[key],vals=bucket.rows.map((d,j)=>m.f(d,baseIdx+j));
+  return m.agg==="sum"?vals.reduce((a,b)=>a+b,0):vals.reduce((a,b)=>a+b,0)/vals.length;
+}
+/* Chart form follows the data's job, not a user dropdown:
+   one measure over time → line; one measure split into parts → stacked
+   bars; two measures in the same unit → two lines on one axis; two
+   measures in different units → two panels sharing the x axis (never a
+   second y-axis). */
+function pickForm(){
+  const two=!!EX.m2, sameUnit=two&&EXM[EX.m1].u===EXM[EX.m2].u;
+  if(two)return sameUnit?"twoLines":"twoPanels";
+  return EX.split==="none"?"line":"stack";
+}
+
+function drawExplore(){
+  const svg=$("#exChart");svg.innerHTML="";const tip=mkTip("#exTip","#exChart");
+  const form=pickForm(), m1=EXM[EX.m1], split=EXS[EX.split];
+  const days=EX.grain==="day"?win(30):D90;
+  const bks=buckets(EX.grain,days);
+  const W=svg.clientWidth||900,H2=270,L=66,Rp=10,T2=16,B=30,x0=L,x1=W-Rp;
+  const parts=(form==="stack"&&split.parts)?split.parts:null;
+  const share=parts&&EX.mode==="pct";
+
+  /* values per bucket */
+  let base=0;const idxOf=[];bks.forEach(b=>{idxOf.push(base);base+=b.rows.length});
+  const v1=bks.map((b,i)=>aggregate(b,EX.m1,idxOf[i]));
+  const v2=EX.m2?bks.map((b,i)=>aggregate(b,EX.m2,idxOf[i])):null;
+  const partVals=parts?bks.map((b,bi)=>parts.map((p,pi)=>
+    v1[bi]*p.w*(0.9+jit[(bi*7+pi)%400]*0.2))):null;
+
+  const xOf=i=>bks.length<2?x0:x0+(i/(bks.length-1))*(x1-x0);
+  const slot=(x1-x0)/Math.max(1,bks.length);
+  const labStep=Math.max(1,Math.ceil(bks.length/8));
+  const lgd=[];let note="";
+
+  function panel(top,bot,vals,key,col,kind,stacked){
+    const m=EXM[key];
+    const maxV=stacked?Math.max(...vals.map(v=>v.reduce((a,b)=>a+b,0))):Math.max(...vals);
+    const tk=share?[0,25,50,75,100]:ticks(maxV*1.14,3);
+    const cap=share?100:tk[tk.length-1];
+    const yOf=v=>bot-(v/cap)*(bot-top);
+    axes(svg,x0,x1,bot,tk.map(v=>({v,y:yOf(v)})),share?(v=>v+"%"):unitFmt(m.u));
+    if(kind==="line"){
+      const d=vals.map((v,i)=>(i?"L":"M")+xOf(i).toFixed(1)+" "+yOf(v).toFixed(1)).join(" ");
+      const gid="ex"+key+top,defs=el("defs"),lg=el("linearGradient",{id:gid,x1:0,y1:0,x2:0,y2:1});
+      lg.appendChild(el("stop",{offset:"0%","stop-color":col,"stop-opacity":.22}));
+      lg.appendChild(el("stop",{offset:"100%","stop-color":col,"stop-opacity":0}));
+      defs.appendChild(lg);svg.appendChild(defs);
+      svg.appendChild(el("path",{d:d+` L ${xOf(vals.length-1)} ${bot} L ${xOf(0)} ${bot} Z`,fill:`url(#${gid})`}));
+      svg.appendChild(el("path",{d,fill:"none",stroke:col,"stroke-width":2,"stroke-linejoin":"round"}));
+      svg.appendChild(el("circle",{cx:xOf(vals.length-1),cy:yOf(vals[vals.length-1]),r:3.4,fill:col}));
+      dlabel(svg,xOf(vals.length-1)-20,yOf(vals[vals.length-1])-9,unitFmt(m.u)(vals[vals.length-1]),col);
+    }else if(stacked){
+      const bw=Math.min(36,Math.max(2,slot*.62));
+      vals.forEach((pv,i)=>{const tot=pv.reduce((a,b)=>a+b,0);let acc=0;
+        pv.forEach((val,pi)=>{const shown=share?val/tot*100:val;
+          const h=(shown/cap)*(bot-top);
+          svg.appendChild(el("rect",{x:xOf(i)-bw/2,y:yOf(acc+shown),width:bw,
+            height:Math.max(0,h-(pi<pv.length-1?2:0)),fill:C(parts[pi].c)}));
+          acc+=shown})});
+    }else{
+      const bw=Math.min(36,Math.max(2,slot*.62));
+      vals.forEach((v,i)=>svg.appendChild(el("rect",{x:xOf(i)-bw/2,y:yOf(v),width:bw,
+        height:Math.max(1,bot-yOf(v)),rx:2,fill:col})));
+    }
+    /* comparison ghost */
+    if(EX.cmp==="prev"&&!stacked){
+      const shift=Math.max(1,Math.floor(vals.length/2));
+      const gv=vals.map((_,i)=>vals[Math.max(0,i-shift)]*0.88);
+      const d=gv.map((v,i)=>(i?"L":"M")+xOf(i).toFixed(1)+" "+yOf(v).toFixed(1)).join(" ");
+      svg.appendChild(el("path",{d,fill:"none",stroke:C("--ink-3"),"stroke-width":1.5,opacity:.55}));
+    }
+    const t=el("text",{x:x0,y:top-6,fill:C("--ink-3"),"font-size":10,"font-weight":700,
+      "font-family":C("--sans"),"letter-spacing":".13em"});
+    t.textContent=m.l.toUpperCase();svg.appendChild(t);
+    return yOf;
+  }
+
+  let y1;
+  if(form==="twoPanels"){
+    panel(T2,148,v1,EX.m1,C("--s1"),"line",false);
+    panel(180,H2-B,v2,EX.m2,C("--s2"),"bar",false);y1=H2-B;
+    note=`Two metrics in different units (${m1.u}, ${EXM[EX.m2].u}), so they get one panel each on a shared
+      time axis. A second y-axis would imply a correlation the data doesn't contain.`;
+    lgd.push([C("--s1"),m1.l],[C("--s2"),EXM[EX.m2].l]);
+  }else if(form==="twoLines"){
+    const bot=H2-B;
+    const both=[...v1,...v2],tk=ticks(Math.max(...both)*1.14,4),cap=tk[tk.length-1];
+    const yOf=v=>bot-(v/cap)*(bot-T2);
+    axes(svg,x0,x1,bot,tk.map(v=>({v,y:yOf(v)})),unitFmt(m1.u));
+    [[v1,C("--s1"),m1.l],[v2,C("--s2"),EXM[EX.m2].l]].forEach(([vals,col,lab])=>{
+      const d=vals.map((v,i)=>(i?"L":"M")+xOf(i).toFixed(1)+" "+yOf(v).toFixed(1)).join(" ");
+      svg.appendChild(el("path",{d,fill:"none",stroke:col,"stroke-width":2,"stroke-linejoin":"round"}));
+      svg.appendChild(el("circle",{cx:xOf(vals.length-1),cy:yOf(vals[vals.length-1]),r:3.4,fill:col}));
+      dlabel(svg,xOf(vals.length-1)-22,yOf(vals[vals.length-1])-9,unitFmt(m1.u)(vals[vals.length-1]),col);
+      lgd.push([col,lab])});
+    y1=bot;
+    note=`Both metrics are in the same unit, so they share one axis directly — no indexing needed.`;
+  }else if(form==="stack"){
+    panel(T2,H2-B,partVals,EX.m1,C("--s1"),"bar",true);y1=H2-B;
+    parts.forEach(p=>lgd.push([C(p.c),p.k]));
+    note=share?`Each bar is normalised to 100%, so this shows mix rather than volume.`
+      :`${m1.l} split by ${split.l.toLowerCase()}. Switch to Share % to compare mix instead of volume.`;
+  }else{
+    panel(T2,H2-B,v1,EX.m1,C("--s1"),"line",false);y1=H2-B;
+    lgd.push([C("--s1"),m1.l]);
+    note=`${m1.l} by ${EX.grain}. Add a breakdown or a second metric to go deeper.`;
+  }
+  if(EX.cmp==="prev"&&form!=="stack"){lgd.push([C("--ink-3"),"Previous period"]);}
+
+  bks.forEach((b,i)=>{if(i%labStep===0||i===bks.length-1)
+    xlab(svg,xOf(i),y1+20,EX.grain==="show"?"#"+(i+1):b.lab)});
+
+  /* hover */
+  const cross=el("line",{y1:T2,y2:y1,stroke:C("--rule-2"),"stroke-width":1,opacity:0});svg.appendChild(cross);
+  const hit=el("rect",{x:x0,y:T2,width:x1-x0,height:y1-T2,fill:"transparent"});svg.appendChild(hit);
+  hit.addEventListener("mousemove",e=>{
+    const r=svg.getBoundingClientRect();
+    const i=Math.max(0,Math.min(bks.length-1,Math.round(((e.clientX-r.left)-x0)/((x1-x0)/Math.max(1,bks.length-1)))));
+    cross.setAttribute("x1",xOf(i));cross.setAttribute("x2",xOf(i));cross.setAttribute("opacity",1);
+    let h=`<div class="th">${EX.grain==="show"?"Show #"+(i+1)+" · "+bks[i].lab:bks[i].lab}</div>`;
+    if(parts){const tot=partVals[i].reduce((a,b)=>a+b,0);
+      h+=parts.map((p,pi)=>row(C(p.c),p.k,share?(partVals[i][pi]/tot*100).toFixed(1)+"%"
+        :unitFull(m1.u)(partVals[i][pi]))).join("")
+        +`<div class="ev">Total ${unitFull(m1.u)(tot)}</div>`}
+    else{h+=row(C("--s1"),m1.l,unitFull(m1.u)(v1[i]));
+      if(v2)h+=row(C("--s2"),EXM[EX.m2].l,unitFull(EXM[EX.m2].u)(v2[i]))}
+    tip.show(h,xOf(i),2)});
+  hit.addEventListener("mouseleave",()=>{tip.hide();cross.setAttribute("opacity",0)});
+
+  /* chrome */
+  $("#exLgd").innerHTML=lgd.map(([c,l])=>`<span><i style="background:${c}"></i>${l}</span>`).join("");
+  $("#exTitle").textContent=m1.l+(EX.m2?" vs "+EXM[EX.m2].l:"")
+    +(parts?" by "+split.l.toLowerCase():"");
+  $("#exSub").textContent=`By ${EX.grain}, ${EX.grain==="day"?"last 30 days":"last 90 days"}`
+    +(EX.cmp==="prev"?", against the previous period":"");
+  $("#exNote").textContent=note;
+  $("#exMode").style.opacity=parts?1:.4;
+  $("#exMode").querySelectorAll("button").forEach(b=>b.disabled=!parts);
+
+  /* table twin */
+  const head=parts?parts.map(p=>p.k):[m1.l].concat(EX.m2?[EXM[EX.m2].l]:[]);
+  $("#exTable").innerHTML=`<table style="font-size:12px"><thead><tr><th>${EX.grain}</th>
+    ${head.map(h=>`<th>${h}</th>`).join("")}${parts?"<th>Total</th>":""}</tr></thead><tbody>`
+    +bks.map((b,i)=>`<tr><td>${b.lab}</td>`
+      +(parts?partVals[i].map(v=>`<td>${unitFull(m1.u)(v)}</td>`).join("")
+        +`<td>${unitFull(m1.u)(partVals[i].reduce((a,b)=>a+b,0))}</td>`
+        :`<td>${unitFull(m1.u)(v1[i])}</td>`+(v2?`<td>${unitFull(EXM[EX.m2].u)(v2[i])}</td>`:""))
+      +`</tr>`).join("")+`</tbody></table>`;
+}
+
+function initExplorer(){
+  const opts=Object.entries(EXM).map(([k,m])=>`<option value="${k}">${m.l}</option>`).join("");
+  $("#exM1").innerHTML=opts;
+  $("#exM2").innerHTML=`<option value="">— none —</option>`+opts;
+  $("#exSplit").innerHTML=Object.entries(EXS).map(([k,s])=>`<option value="${k}">${s.l}</option>`).join("");
+  const sync=()=>{$("#exM1").value=EX.m1;$("#exM2").value=EX.m2;$("#exSplit").value=EX.split;
+    $("#exGrain").value=EX.grain;$("#exCmp").value=EX.cmp;
+    // a breakdown and a second metric can't both be on — they'd need 2 encodings
+    $("#exSplit").disabled=!!EX.m2;$("#exM2").disabled=EX.split!=="none";
+    drawExplore()};
+  $("#exM1").addEventListener("change",e=>{EX.m1=e.target.value;sync()});
+  $("#exM2").addEventListener("change",e=>{EX.m2=e.target.value;sync()});
+  $("#exSplit").addEventListener("change",e=>{EX.split=e.target.value;sync()});
+  $("#exGrain").addEventListener("change",e=>{EX.grain=e.target.value;sync()});
+  $("#exCmp").addEventListener("change",e=>{EX.cmp=e.target.value;sync()});
+  $("#exReset").addEventListener("click",()=>{EX={m1:"gmv",m2:"",split:"channel",grain:"day",cmp:"none",mode:"abs"};
+    $("#exMode").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.m==="abs")));
+    sync();toast("Reset to GMV by channel")});
+  sync();
+}
+
+function drawHeat(){
+  const svg=$("#heatChart");svg.innerHTML="";const tip=mkTip("#heatTip","#heatChart");
+  const W=svg.clientWidth||600,H2=230,L=38,T2=14,B=26,x0=L,x1=W-6,y1=H2-B;
+  const cw=(x1-x0)/HRS.length,ch=(y1-T2)/DOW.length;
+  const max=Math.max(...HEAT.map(h=>h.v));
+  const ramp=["--q1","--q2","--q3","--q4","--q5","--q6"];
+  HEAT.forEach(c=>{
+    const x=x0+HRS.indexOf(c.h)*cw,y=T2+c.d*ch;
+    const step=Math.min(5,Math.floor(c.v/max*6));
+    svg.appendChild(el("rect",{x:x+1,y:y+1,width:cw-2,height:ch-2,rx:2,fill:C(ramp[step])}));
+    const hit=el("rect",{x,y,width:cw,height:ch,fill:"transparent"});
+    hit.addEventListener("mousemove",()=>tip.show(
+      `<div class="th">${DOW[c.d]} · ${c.h>12?c.h-12:c.h}${c.h>=12?"pm":"am"}</div>`
+      +row(C(ramp[step]),"GMV",fmt.usd(c.v)),x+cw/2,Math.max(0,y-54)));
+    hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit)});
+  DOW.forEach((d,i)=>{const t=el("text",{x:x0-8,y:T2+i*ch+ch/2+3.5,"text-anchor":"end",fill:C("--ink-3"),
+    "font-size":10.5,"font-family":C("--sans")});t.textContent=d;svg.appendChild(t)});
+  HRS.forEach((h,i)=>{if(i%2===0)xlab(svg,x0+i*cw+cw/2,y1+18,(h>12?h-12:h)+(h>=12?"p":"a"))});
+  const best=HEAT.reduce((a,b)=>b.v>a.v?b:a);
+  $("#heatNote").innerHTML=`Your strongest hour is <b>${DOW[best.d]} ${best.h>12?best.h-12:best.h}pm</b>
+    at ${fmt.usd(best.v)}. Tuesdays and Wednesdays are near-empty — you rarely stream them.`;
+}
+
+function drawGph(){
+  const svg=$("#gphChart");svg.innerHTML="";const tip=mkTip("#gphTip","#gphChart");
+  const data=D90.filter(d=>d.live).slice(-24);
+  const W=svg.clientWidth||500,H2=230,L=58,Rp=8,T2=14,B=26,x0=L,x1=W-Rp,y1=H2-B;
+  const vals=data.map(d=>(d.show+d.mkt)/d.hours);
+  const tk=ticks(Math.max(...vals)*1.15,3),top=tk[tk.length-1];
+  const yOf=v=>y1-(v/top)*(y1-T2),xOf=i=>x0+(i/(data.length-1))*(x1-x0);
+  axes(svg,x0,x1,y1,tk.map(v=>({v,y:yOf(v)})),fmt.usdk);
+  const d=vals.map((v,i)=>(i?"L":"M")+xOf(i).toFixed(1)+" "+yOf(v).toFixed(1)).join(" ");
+  const defs=el("defs"),lg=el("linearGradient",{id:"gphg",x1:0,y1:0,x2:0,y2:1});
+  lg.appendChild(el("stop",{offset:"0%","stop-color":C("--s1"),"stop-opacity":.20}));
+  lg.appendChild(el("stop",{offset:"100%","stop-color":C("--s1"),"stop-opacity":0}));
+  defs.appendChild(lg);svg.appendChild(defs);
+  svg.appendChild(el("path",{d:d+` L ${xOf(vals.length-1)} ${y1} L ${xOf(0)} ${y1} Z`,fill:"url(#gphg)"}));
+  svg.appendChild(el("path",{d,fill:"none",stroke:C("--s1"),"stroke-width":2,"stroke-linejoin":"round"}));
+  const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+  svg.appendChild(el("line",{x1:x0,x2:x1,y1:yOf(avg),y2:yOf(avg),stroke:C("--ink-3"),"stroke-width":1,
+    "stroke-dasharray":"none",opacity:.5}));
+  dlabel(svg,x1-30,yOf(avg)-6,"avg "+fmt.usdk(avg),C("--ink-3"));
+  svg.appendChild(el("circle",{cx:xOf(vals.length-1),cy:yOf(vals[vals.length-1]),r:3.6,fill:C("--s1")}));
+  dlabel(svg,xOf(vals.length-1)-16,yOf(vals[vals.length-1])-9,fmt.usdk(vals[vals.length-1]),C("--s1"));
+  xlab(svg,x0,y1+18,"24 shows ago");xlab(svg,x1-24,y1+18,"latest");
+  const hit=el("rect",{x:x0,y:T2,width:x1-x0,height:y1-T2,fill:"transparent"});
+  hit.addEventListener("mousemove",e=>{const r=svg.getBoundingClientRect();
+    const i=Math.max(0,Math.min(vals.length-1,Math.round(((e.clientX-r.left)-x0)/((x1-x0)/(vals.length-1)))));
+    tip.show(`<div class="th">${data[i].lab}</div>`+row(C("--s1"),"GMV / live hour",fmt.usd(vals[i]))
+      +`<div class="ev">${data[i].hours.toFixed(1)} h live</div>`,xOf(i),2)});
+  hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit);
+}
+
+function drawMix(){
+  const svg=$("#mixChart");svg.innerHTML="";const tip=mkTip("#mixTip","#mixChart");
+  const W=svg.clientWidth||500,H2=220,L=52,Rp=8,T2=18,B=28,x0=L,x1=W-Rp,y1=H2-B;
+  const tot=MIX.map(d=>d.ret+d.nw+d.cat),tk=ticks(Math.max(...tot)*1.16,4),top=tk[tk.length-1];
+  const yOf=v=>y1-(v/top)*(y1-T2);
+  axes(svg,x0,x1,y1,tk.map(v=>({v,y:yOf(v)})),fmt.num);
+  const slot=(x1-x0)/MIX.length,bw=Math.min(30,slot*.58);
+  const ks=["ret","nw","cat"],cols=[C("--s1"),C("--s2"),C("--s3")],nm=["Returning","New to you","New to category"];
+  MIX.forEach((d,i)=>{const cx=x0+slot*i+slot/2;let acc=0;
+    ks.forEach((k,j)=>{const h=(d[k]/top)*(y1-T2);
+      svg.appendChild(el("rect",{x:cx-bw/2,y:yOf(acc+d[k]),width:bw,height:Math.max(0,h-2),
+        rx:j===2?2:0,fill:cols[j]}));acc+=d[k]});
+    if(i%3===0||i===MIX.length-1){xlab(svg,cx,y1+19,d.w);dlabel(svg,cx,yOf(acc)-7,fmt.num(acc))}
+    const hit=el("rect",{x:x0+slot*i,y:T2,width:slot,height:y1-T2,fill:"transparent"});
+    hit.addEventListener("mousemove",()=>tip.show(`<div class="th">Week of ${d.w}</div>`
+      +ks.map((k,j)=>row(cols[j],nm[j],fmt.num(d[k]))).join("")
+      +`<div class="ev">Returning share ${fmt.pct(d.ret/(d.ret+d.nw+d.cat)*100)}</div>`,cx,2));
+    hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit)});
+  $("#mixLgd").innerHTML=nm.map((n,j)=>`<span><i style="background:${cols[j]}"></i>${n}</span>`).join("");
+}
+
+function drawCohort(){
+  const svg=$("#cohortChart");svg.innerHTML="";const tip=mkTip("#cohortTip","#cohortChart");
+  const W=svg.clientWidth||500,H2=220,L=46,Rp=44,T2=14,B=28,x0=L,x1=W-Rp,y1=H2-B;
+  const wks=[0,2,4,6,8,10,12],tk=ticks(100,4),top=100;
+  const yOf=v=>y1-(v/top)*(y1-T2),xOf=i=>x0+(i/(wks.length-1))*(x1-x0);
+  axes(svg,x0,x1,y1,tk.map(v=>({v,y:yOf(v)})),v=>v+"%");
+  COHORT.forEach(c=>{const col=C(c.c);
+    const pts=c.v.map((v,i)=>v==null?null:[xOf(i),yOf(v)]).filter(Boolean);
+    const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+    svg.appendChild(el("path",{d,fill:"none",stroke:col,"stroke-width":2,"stroke-linejoin":"round",
+      "stroke-linecap":"round"}));
+    const last=pts[pts.length-1];
+    svg.appendChild(el("circle",{cx:last[0],cy:last[1],r:3.4,fill:col}));
+    const t=el("text",{x:last[0]+7,y:last[1]+3.5,fill:col,"font-size":10.5,"font-weight":660,
+      "font-family":C("--sans")});t.textContent=c.v.filter(x=>x!=null).slice(-1)[0]+"%";svg.appendChild(t)});
+  wks.forEach((w,i)=>xlab(svg,xOf(i),y1+19,w===0?"first buy":"wk "+w));
+  const hit=el("rect",{x:x0,y:T2,width:x1-x0,height:y1-T2,fill:"transparent"});
+  hit.addEventListener("mousemove",e=>{const r=svg.getBoundingClientRect();
+    const i=Math.max(0,Math.min(wks.length-1,Math.round(((e.clientX-r.left)-x0)/((x1-x0)/(wks.length-1)))));
+    tip.show(`<div class="th">${i?"Week "+wks[i]+" after first buy":"First purchase"}</div>`
+      +COHORT.map(c=>c.v[i]==null?"":row(C(c.c),c.m,c.v[i]+"%")).join(""),xOf(i),2)});
+  hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit);
+  $("#cohortLgd").innerHTML=COHORT.map(c=>`<span><i style="background:${C(c.c)}"></i>${c.m}</span>`).join("");
+}
+
+function drawLtv(){
+  const svg=$("#ltvChart");svg.innerHTML="";const tip=mkTip("#ltvTip","#ltvChart");
+  const W=svg.clientWidth||500,H2=220,L=48,Rp=8,T2=20,B=28,x0=L,x1=W-Rp,y1=H2-B;
+  const tk=ticks(Math.max(...LTV.map(d=>d.v))*1.16,4),top=tk[tk.length-1];
+  const yOf=v=>y1-(v/top)*(y1-T2);
+  axes(svg,x0,x1,y1,tk.map(v=>({v,y:yOf(v)})),fmt.num);
+  const slot=(x1-x0)/LTV.length,bw=Math.min(46,slot*.66);
+  const tot=LTV.reduce((a,b)=>a+b.v,0);
+  LTV.forEach((d,i)=>{const cx=x0+slot*i+slot/2;
+    svg.appendChild(el("rect",{x:cx-bw/2,y:yOf(d.v),width:bw,height:y1-yOf(d.v),rx:3,fill:C("--s1")}));
+    dlabel(svg,cx,yOf(d.v)-7,fmt.num(d.v));xlab(svg,cx,y1+19,d.l);
+    const hit=el("rect",{x:x0+slot*i,y:T2,width:slot,height:y1-T2,fill:"transparent"});
+    hit.addEventListener("mousemove",()=>tip.show(`<div class="th">${d.l} lifetime spend</div>`
+      +row(C("--s1"),"Buyers",fmt.num(d.v))
+      +`<div class="ev">${fmt.pct(d.v/tot*100)} of all buyers</div>`,cx,2));
+    hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit)});
+  const top5=LTV[4].v+LTV[5].v;
+  $("#ltvNote").innerHTML=`The top two bands are just <b>${fmt.pct(top5/tot*100)}</b> of buyers.
+    Your 440 biggest buyers are worth more than the other 3,481 combined.`;
+}
+
+/* stacked-area share chart, reused for traffic mix and format mix */
+function drawShareArea(sel,tipSel,lgdSel,data,series,noteSel){
+  const svg=$(sel);svg.innerHTML="";const tip=mkTip(tipSel,sel);
+  const W=svg.clientWidth||600,H2=svg.getAttribute("height")*1,L=44,Rp=8,T2=14,B=28,x0=L,x1=W-Rp,y1=H2-B;
+  const yOf=v=>y1-(v/100)*(y1-T2),xOf=i=>x0+(i/(data.length-1))*(x1-x0);
+  axes(svg,x0,x1,y1,[0,25,50,75,100].map(v=>({v,y:yOf(v)})),v=>v+"%");
+  const norm=data.map(d=>{const t=series.reduce((a,s)=>a+d[s.k],0);
+    const o={w:d.w};series.forEach(s=>o[s.k]=d[s.k]/t*100);return o});
+  let base=norm.map(()=>0);
+  series.forEach(s=>{
+    const up=norm.map((d,i)=>[xOf(i),yOf(base[i]+d[s.k])]);
+    const dn=norm.map((d,i)=>[xOf(i),yOf(base[i])]).reverse();
+    const d="M"+up.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" L ")
+      +" L "+dn.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" L ")+" Z";
+    svg.appendChild(el("path",{d,fill:C(s.c),opacity:.92}));
+    svg.appendChild(el("path",{d:"M"+up.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" L "),
+      fill:"none",stroke:C("--paper"),"stroke-width":2}));
+    const li=norm.length-1,mid=yOf(base[li]+norm[li][s.k]/2);
+    if(norm[li][s.k]>7)dlabel(svg,xOf(li)-26,mid+3,norm[li][s.k].toFixed(0)+"%",C("--paper"));
+    norm.forEach((d,i)=>base[i]+=d[s.k])});
+  norm.forEach((d,i)=>{if(i%3===0||i===norm.length-1)xlab(svg,xOf(i),y1+19,d.w)});
+  const hit=el("rect",{x:x0,y:T2,width:x1-x0,height:y1-T2,fill:"transparent"});
+  hit.addEventListener("mousemove",e=>{const r=svg.getBoundingClientRect();
+    const i=Math.max(0,Math.min(norm.length-1,Math.round(((e.clientX-r.left)-x0)/((x1-x0)/(norm.length-1)))));
+    tip.show(`<div class="th">Week of ${norm[i].w}</div>`
+      +series.map(s=>row(C(s.c),s.l,norm[i][s.k].toFixed(1)+"%")).join(""),xOf(i),2)});
+  hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit);
+  $(lgdSel).innerHTML=series.map(s=>`<span><i style="background:${C(s.c)}"></i>${s.l}</span>`).join("");
+  if(noteSel){const f=norm[0],l=norm[norm.length-1];
+    const moved=series.map(s=>({l:s.l,d:l[s.k]-f[s.k]})).sort((a,b)=>Math.abs(b.d)-Math.abs(a.d))[0];
+    $(noteSel).innerHTML=`Biggest shift over 12 weeks: <b>${moved.l}</b>
+      ${moved.d>=0?"up":"down"} ${Math.abs(moved.d).toFixed(1)} points.`}
+}
+
+function drawFunnel(sel,tipSel,stages,h){
+  const svg=$(sel);svg.innerHTML="";const tip=mkTip(tipSel,sel);
+  const W=svg.clientWidth||500,H2=h,L=6,Rp=6,T2=12,x0=L,x1=W-Rp;
+  const rowH=(H2-T2-8)/stages.length,ramp=["--q2","--q3","--q4","--q5","--q6"];
+  stages.forEach((s,i)=>{
+    const keep=i?(s.v/stages[i-1].v)*100:100,y=T2+i*rowH;
+    const bw=(x1-x0)*(keep/100);
+    svg.appendChild(el("rect",{x:x0,y:y+16,width:x1-x0,height:14,rx:3,fill:"#E4E2D6"}));
+    svg.appendChild(el("rect",{x:x0,y:y+16,width:Math.max(2,bw),height:14,rx:3,fill:C(ramp[i])}));
+    const lt=el("text",{x:x0,y:y+11,fill:C("--ink-2"),"font-size":11.5,"font-family":C("--sans")});
+    lt.textContent=s.l;svg.appendChild(lt);
+    const vt=el("text",{x:x1,y:y+11,"text-anchor":"end",fill:C("--ink"),"font-size":11.5,
+      "font-weight":680,"font-family":C("--sans")});
+    vt.style.fontVariantNumeric="tabular-nums";vt.textContent=fmt.num(s.v);svg.appendChild(vt);
+    if(i){const kt=el("text",{x:x0+6,y:y+27,fill:"#fff","font-size":10,"font-weight":700,
+      "font-family":C("--sans")});kt.textContent=keep.toFixed(1)+"%";svg.appendChild(kt)}
+    const hit=el("rect",{x:x0,y,width:x1-x0,height:rowH,fill:"transparent"});
+    hit.addEventListener("mousemove",()=>tip.show(`<div class="th">${s.l}</div>`
+      +row(C(ramp[i]),"Reached",fmt.num(s.v))
+      +(i?`<div class="ev">${keep.toFixed(1)}% kept · ${fmt.num(stages[i-1].v-s.v)} lost</div>`:""),
+      W/2,Math.max(0,y-40)));
+    hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit)});
+}
+
+function drawDonut(sel,tipSel,slices,centreLabel,centreVal){
+  const svg=$(sel);svg.innerHTML="";const tip=mkTip(tipSel,sel);
+  const W=svg.clientWidth||300,H2=240,cx=W/2,cy=H2/2-6,r=Math.min(W,H2)/2-46,ir=r*0.6;
+  const tot=slices.reduce((a,b)=>a+b.v,0);let ang=-Math.PI/2;
+  slices.forEach(s=>{
+    const a2=ang+(s.v/tot)*Math.PI*2,large=(a2-ang)>Math.PI?1:0;
+    const p=(a,rr)=>[cx+Math.cos(a)*rr,cy+Math.sin(a)*rr];
+    const[x1,y1]=p(ang,r),[x2,y2]=p(a2,r),[x3,y3]=p(a2,ir),[x4,y4]=p(ang,ir);
+    svg.appendChild(el("path",{d:`M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}
+      L ${x3} ${y3} A ${ir} ${ir} 0 ${large} 0 ${x4} ${y4} Z`,fill:C(s.c),
+      stroke:C("--paper"),"stroke-width":2}));
+    const mid=(ang+a2)/2,[lx,ly]=p(mid,r+16);
+    if(s.v/tot>0.06){const t=el("text",{x:lx,y:ly+3.5,"text-anchor":lx>cx?"start":"end",
+      fill:C("--ink-2"),"font-size":10.5,"font-weight":640,"font-family":C("--sans")});
+      t.textContent=s.v.toFixed(1)+"%";svg.appendChild(t)}
+    const hit=el("path",{d:`M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}
+      L ${x3} ${y3} A ${ir} ${ir} 0 ${large} 0 ${x4} ${y4} Z`,fill:"transparent"});
+    hit.addEventListener("mousemove",()=>tip.show(`<div class="th">${s.l}</div>`
+      +row(C(s.c),"Share",s.v.toFixed(1)+"%"),cx,4));
+    hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit);
+    ang=a2});
+  const c1=el("text",{x:cx,y:cy-2,"text-anchor":"middle",fill:C("--ink"),"font-size":19,
+    "font-weight":730,"font-family":C("--sans")});c1.textContent=centreVal;svg.appendChild(c1);
+  const c2=el("text",{x:cx,y:cy+14,"text-anchor":"middle",fill:C("--ink-3"),"font-size":10,
+    "font-weight":700,"font-family":C("--sans"),"letter-spacing":".1em"});
+  c2.textContent=centreLabel;svg.appendChild(c2);
+  const lg=slices.map(s=>`<span><i style="background:${C(s.c)}"></i>${s.l}</span>`).join("");
+  const host=svg.parentElement.parentElement.querySelector(".donutlgd");
+  if(host)host.innerHTML=lg;
+}
+
+function drawWatch(){
+  const svg=$("#watchChart");svg.innerHTML="";const tip=mkTip("#watchTip","#watchChart");
+  const W=svg.clientWidth||400,H2=270,L=50,Rp=8,T2=20,B=28,x0=L,x1=W-Rp,y1=H2-B;
+  const tk=ticks(Math.max(...WATCH.map(d=>d.v))*1.16,4),top=tk[tk.length-1];
+  const yOf=v=>y1-(v/top)*(y1-T2);
+  axes(svg,x0,x1,y1,tk.map(v=>({v,y:yOf(v)})),fmt.num);
+  const slot=(x1-x0)/WATCH.length,bw=Math.min(40,slot*.66);
+  const tot=WATCH.reduce((a,b)=>a+b.v,0);
+  WATCH.forEach((d,i)=>{const cx=x0+slot*i+slot/2;
+    svg.appendChild(el("rect",{x:cx-bw/2,y:yOf(d.v),width:bw,height:y1-yOf(d.v),rx:3,fill:C("--s1")}));
+    dlabel(svg,cx,yOf(d.v)-7,fmt.num(d.v));xlab(svg,cx,y1+19,d.l);
+    const hit=el("rect",{x:x0+slot*i,y:T2,width:slot,height:y1-T2,fill:"transparent"});
+    hit.addEventListener("mousemove",()=>tip.show(`<div class="th">Watched ${d.l}</div>`
+      +row(C("--s1"),"Viewers",fmt.num(d.v))
+      +`<div class="ev">${fmt.pct(d.v/tot*100)} of the room</div>`,cx,2));
+    hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit)});
+  const stay=WATCH.slice(3).reduce((a,b)=>a+b.v,0);
+  $("#watchNote").innerHTML=`<b>${fmt.pct(WATCH[0].v/tot*100)}</b> bounced inside 30 seconds, but
+    <b>${fmt.num(stay)}</b> stayed past five minutes — and those are who bought.`;
+}
+
+function drawScatter(){
+  const svg=$("#itemScatter");svg.innerHTML="";const tip=mkTip("#itemTip","#itemScatter");
+  const W=svg.clientWidth||700,H2=270,L=56,Rp=10,T2=14,B=28,x0=L,x1=W-Rp,y1=H2-B;
+  const maxP=Math.max(...ITEMS.map(i=>i.p))*1.1;
+  const tk=ticks(maxP,4),top=tk[tk.length-1];
+  const yOf=v=>y1-(v/top)*(y1-T2),xOf=m=>x0+(m/TLN)*(x1-x0);
+  axes(svg,x0,x1,y1,tk.map(v=>({v,y:yOf(v)})),fmt.usdk);
+  EV.forEach(e=>svg.appendChild(el("line",{x1:xOf(e.m),x2:xOf(e.m),y1:T2,y2:y1,
+    stroke:C("--yellow"),"stroke-width":1,opacity:.35})));
+  ITEMS.forEach(it=>{
+    const r=3+Math.sqrt(it.q)*1.9;
+    const c=el("circle",{cx:xOf(it.t),cy:yOf(it.p),r,fill:C(it.auc?"--s1":"--s2"),
+      "fill-opacity":.55,stroke:C("--paper"),"stroke-width":1.5});
+    c.addEventListener("mousemove",()=>tip.show(
+      `<div class="th">${clock(it.t)} PM · ${it.t}m in</div>`
+      +row(C(it.auc?"--s1":"--s2"),it.auc?"Auction":"Buy Now",fmt.usd2(it.p))
+      +`<div class="ev">${it.q} item${it.q>1?"s":""} · ${fmt.usd(it.p*it.q)} total</div>`,
+      xOf(it.t),Math.max(0,yOf(it.p)-64)));
+    c.addEventListener("mouseleave",tip.hide);svg.appendChild(c)});
+  for(let m=0;m<=TLN;m+=30)xlab(svg,xOf(m),y1+19,clock(m));
+}
+
+function drawGive(){
+  const svg=$("#giveChart");svg.innerHTML="";const tip=mkTip("#giveTip","#giveChart");
+  const gives=EV.filter(e=>e.k==="give");
+  const rows=gives.flatMap(e=>{const w=tl.slice(e.m,e.m+8),p=tl.slice(Math.max(0,e.m-10),e.m);
+    const avg=(a,k)=>a.reduce((s,r)=>s+r[k],0)/(a.length||1);
+    return[{g:e,metric:"Viewers / min",before:avg(p,"ccv"),during:avg(w,"ccv")},
+           {g:e,metric:"Orders / min",before:avg(p,"orders"),during:avg(w,"orders")}]});
+  const W=svg.clientWidth||700,H2=210,L=58,Rp=10,T2=22,B=42,x0=L,x1=W-Rp,y1=H2-B;
+  const groups=rows.length;
+  const slot=(x1-x0)/groups,bw=Math.min(26,slot*.3);
+  rows.forEach((r,i)=>{
+    const local=Math.max(r.before,r.during)*1.25;
+    const yOf=v=>y1-(v/local)*(y1-T2);
+    const cx=x0+slot*i+slot/2;
+    svg.appendChild(el("rect",{x:cx-bw-2,y:yOf(r.before),width:bw,height:y1-yOf(r.before),rx:2,fill:C("--rule-2")}));
+    svg.appendChild(el("rect",{x:cx+2,y:yOf(r.during),width:bw,height:y1-yOf(r.during),rx:2,fill:C("--s1")}));
+    const lift=(r.during/r.before-1)*100;
+    dlabel(svg,cx,yOf(Math.max(r.before,r.during))-8,(lift>=0?"+":"")+lift.toFixed(0)+"%",
+      lift>=0?C("--money"):C("--crit"));
+    xlab(svg,cx,y1+18,r.metric);
+    xlab(svg,cx,y1+32,clock(r.g.m)+" PM");
+    const hit=el("rect",{x:x0+slot*i,y:T2,width:slot,height:y1-T2,fill:"transparent"});
+    hit.addEventListener("mousemove",()=>tip.show(
+      `<div class="th">${r.g.t.replace(/^Giveaway — /,"")}</div>`
+      +row(C("--rule-2"),"10 min before",N2(r.before,1))+row(C("--s1"),"During",N2(r.during,1))
+      +`<div class="ev">${(lift>=0?"+":"")+lift.toFixed(0)}% · ran ${clock(r.g.m)} PM for 8 min</div>`,cx,2));
+    hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit)});
+  svg.appendChild(el("line",{x1:x0,x2:x1,y1,y2:y1,stroke:C("--rule-2"),"stroke-width":1}));
+  const t=el("text",{x:x0-9,y:T2+4,"text-anchor":"end",fill:C("--ink-3"),"font-size":10,
+    "font-family":C("--sans")});t.textContent="per-pair scale";svg.appendChild(t);
+}
+
+function drawSell(){
+  const svg=$("#stChart");svg.innerHTML="";const tip=mkTip("#stTip","#stChart");
+  const data=[...shows].reverse();
+  const W=svg.clientWidth||500,H2=220,L=48,Rp=8,T2=20,B=28,x0=L,x1=W-Rp,y1=H2-B;
+  const yOf=v=>y1-(v/100)*(y1-T2);
+  axes(svg,x0,x1,y1,[0,25,50,75,100].map(v=>({v,y:yOf(v)})),v=>v+"%");
+  const slot=(x1-x0)/data.length,bw=Math.min(28,slot*.6);
+  const avg=data.reduce((a,b)=>a+b.sell,0)/data.length;
+  data.forEach((s,i)=>{const cx=x0+slot*i+slot/2;
+    const good=s.sell>=avg;
+    svg.appendChild(el("rect",{x:cx-bw/2,y:yOf(s.sell),width:bw,height:y1-yOf(s.sell),rx:3,
+      fill:good?C("--s1"):C("--s2")}));
+    if(i===data.length-1)dlabel(svg,cx,yOf(s.sell)-7,s.sell.toFixed(0)+"%");
+    const hit=el("rect",{x:x0+slot*i,y:T2,width:slot,height:y1-T2,fill:"transparent"});
+    hit.addEventListener("mousemove",()=>tip.show(`<div class="th">${s.nm}</div>`
+      +row(good?C("--s1"):C("--s2"),"Sell-through",s.sell.toFixed(1)+"%")
+      +`<div class="ev">${fmt.num(s.orders)} sold of ${fmt.num(s.items)} run</div>`,cx,2));
+    hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit)});
+  svg.appendChild(el("line",{x1:x0,x2:x1,y1:yOf(avg),y2:yOf(avg),stroke:C("--ink"),"stroke-width":1,opacity:.45}));
+  dlabel(svg,x1-34,yOf(avg)-6,"avg "+avg.toFixed(0)+"%",C("--ink-2"));
+  xlab(svg,x0+slot/2,y1+19,"oldest");xlab(svg,x1-slot/2,y1+19,"latest");
+}
+
+function drawDead(){
+  const svg=$("#daChart");svg.innerHTML="";const tip=mkTip("#daTip","#daChart");
+  const data=[...shows].reverse();
+  const W=svg.clientWidth||500,H2=220,L=44,Rp=8,T2=20,B=28,x0=L,x1=W-Rp,y1=H2-B;
+  const tk=ticks(Math.max(...data.map(d=>d.dead))*1.2,4),top=tk[tk.length-1];
+  const yOf=v=>y1-(v/top)*(y1-T2);
+  axes(svg,x0,x1,y1,tk.map(v=>({v,y:yOf(v)})),v=>v+"m");
+  const slot=(x1-x0)/data.length,bw=Math.min(28,slot*.6);
+  const best=Math.min(...data.map(d=>d.dead));
+  data.forEach((s,i)=>{const cx=x0+slot*i+slot/2;
+    svg.appendChild(el("rect",{x:cx-bw/2,y:yOf(s.dead),width:bw,height:y1-yOf(s.dead),rx:3,
+      fill:s.dead===best?C("--s3"):C("--s2")}));
+    if(s.dead===best)dlabel(svg,cx,yOf(s.dead)-7,"best "+s.dead+"m",C("--money"));
+    const hit=el("rect",{x:x0+slot*i,y:T2,width:slot,height:y1-T2,fill:"transparent"});
+    hit.addEventListener("mousemove",()=>tip.show(`<div class="th">${s.nm}</div>`
+      +row(s.dead===best?C("--s3"):C("--s2"),"Dead air",s.dead+" min")
+      +`<div class="ev">${fmt.pct(s.dead/s.dur*100)} of a ${fmt.dur(s.dur)} show</div>`,cx,2));
+    hit.addEventListener("mouseleave",tip.hide);svg.appendChild(hit)});
+  xlab(svg,x0+slot/2,y1+19,"oldest");xlab(svg,x1-slot/2,y1+19,"latest");
+}
+
+const clock=m=>{const t=7*60+2+m,h=Math.floor(t/60),mm=t%60;
+  return (h>12?h-12:h)+":"+String(mm).padStart(2,"0")};
+const YC=()=>C("--yellow");
+function winSlice(){return tWin==="30"?tl.slice(-30):tWin==="5"?tl.slice(-5):tl}
+function drawTL(){
+  const svg=$("#tlChart");svg.innerHTML="";const tip=mkTip("#tlTip","#tlChart");
+  const data=winSlice(),n=data.length,m0=data[0].m,m1=data[n-1].m;
+  const W=svg.clientWidth||900,L=64,Rp=10,x0=L,x1=W-Rp;
+  const two=tSel.length>1,P=two?[{t:18,b:148},{t:180,b:262}]:[{t:18,b:262}];
+  const xOf=m=>n<2?x0:x0+((m-m0)/(m1-m0))*(x1-x0);
+  tSel.forEach((key,pi)=>{const spec=TREND[key],p=P[pi],col=C(spec.c);
+    const tk=ticks(Math.max(...data.map(d=>d[key]))*1.16,pi&&two?2:3),top=tk[tk.length-1];
+    const yOf=v=>p.b-(v/top)*(p.b-p.t);
+    axes(svg,x0,x1,p.b,tk.map(v=>({v,y:yOf(v)})),v=>key==="gmv"?fmt.usdk(v):fmt.num(v),true);
+    if(spec.kind==="line"){
+      const d=data.map((r,i)=>(i?"L":"M")+xOf(r.m).toFixed(1)+" "+yOf(r[key]).toFixed(1)).join(" ");
+      const gid="tg"+pi,defs=el("defs"),lg=el("linearGradient",{id:gid,x1:0,y1:0,x2:0,y2:1});
+      lg.appendChild(el("stop",{offset:"0%","stop-color":col,"stop-opacity":.30}));
+      lg.appendChild(el("stop",{offset:"100%","stop-color":col,"stop-opacity":0}));
+      defs.appendChild(lg);svg.appendChild(defs);
+      svg.appendChild(el("path",{d:d+` L ${xOf(m1)} ${p.b} L ${xOf(m0)} ${p.b} Z`,fill:`url(#${gid})`}));
+      svg.appendChild(el("path",{d,fill:"none",stroke:col,"stroke-width":2,"stroke-linejoin":"round"}));
+    }else{const bw=Math.max(1.5,(x1-x0)/n-2);
+      data.forEach(r=>{if(r[key]>0)svg.appendChild(el("rect",{x:xOf(r.m)-bw/2,y:yOf(r[key]),width:bw,
+        height:Math.max(1,p.b-yOf(r[key])),rx:Math.min(2,bw/2),fill:col}))})}
+    const t=el("text",{x:x0,y:p.t-6,fill:"rgba(250,250,247,.5)","font-size":10,"font-weight":700,
+      "font-family":C("--sans"),"letter-spacing":".13em"});t.textContent=spec.l.toUpperCase();svg.appendChild(t)});
+  const yTop=P[0].t,yBot=P[P.length-1].b,yc=YC();
+  EV.filter(e=>e.m>=m0&&e.m<=m1).forEach(e=>{const x=xOf(e.m),sh=EVT[e.k].s;
+    svg.appendChild(el("line",{x1:x,x2:x,y1:yTop,y2:yBot,stroke:yc,"stroke-width":1,opacity:.30}));
+    if(sh==="circle")svg.appendChild(el("circle",{cx:x,cy:yTop,r:3.6,fill:yc}));
+    else if(sh==="square")svg.appendChild(el("rect",{x:x-3.2,y:yTop-3.2,width:6.4,height:6.4,fill:yc}));
+    else svg.appendChild(el("path",{d:`M ${x} ${yTop-4.4} L ${x+4.4} ${yTop} L ${x} ${yTop+4.4} L ${x-4.4} ${yTop} Z`,fill:yc}))});
+  const step=n>90?20:n>30?10:1;
+  data.forEach((r,i)=>{if(i%step===0||i===n-1)xlab(svg,xOf(r.m),yBot+20,clock(r.m),true)});
+  const cross=el("line",{y1:yTop,y2:yBot,stroke:"rgba(250,250,247,.3)","stroke-width":1,opacity:0});
+  svg.appendChild(cross);
+  const hit=el("rect",{x:x0,y:yTop,width:x1-x0,height:yBot-yTop,fill:"transparent",cursor:"pointer"});
+  svg.appendChild(hit);
+  const at=cx=>{const r=svg.getBoundingClientRect(),f=(cx-r.left-x0)/((x1-x0)||1);
+    return Math.max(m0,Math.min(m1,Math.round(m0+f*(m1-m0))))};
+  hit.addEventListener("mousemove",ev=>{const m=at(ev.clientX),d=tl[m];
+    cross.setAttribute("x1",xOf(m));cross.setAttribute("x2",xOf(m));cross.setAttribute("opacity",1);
+    const e=EV.find(x=>Math.abs(x.m-m)<=1);
+    tip.show(`<div class="th">${clock(m)} PM · ${m}m in</div>`
+      +tSel.map(k=>row(C(TREND[k].c),TREND[k].l,TREND[k].fmt(d[k]))).join("")
+      +(e?`<div class="ev">${evGlyph[EVT[e.k].s]} ${EVT[e.k].l} — ${e.t}</div>`:"")
+      +`<div class="ev">Click to open replay here</div>`,xOf(m),0)});
+  hit.addEventListener("mouseleave",()=>{tip.hide();cross.setAttribute("opacity",0)});
+  hit.addEventListener("click",ev=>toast(`Replay would jump to ${clock(at(ev.clientX))} PM`));
+  $("#tlLgd").innerHTML=tSel.map(k=>`<span><i style="background:${C(TREND[k].c)}"></i>${TREND[k].l}</span>`).join("")
+    +`<span style="opacity:.45">│</span>`
+    +Object.values(EVT).map(v=>`<span style="opacity:.8"><b style="color:${YC()};font-size:11px">${evGlyph[v.s]}</b> ${v.l}</span>`).join("");
+}
+
+/* ═══════════ non-chart renderers ═══════════ */
+function renderFigs(){
+  $("#figs").innerHTML=FIGS.map((f,i)=>`<div class="fig"><div class="ml">${f.ml}</div>
+    <div class="n">${f.v}</div>
+    <div class="d ${f.d>0?"up":"dn"}">${f.d>0?"▲":"▼"} ${Math.abs(f.d)}%
+      <span class="flat" style="font-weight:500">vs previous</span></div>
+    <div class="note" style="margin-top:6px">${f.sub}</div>
+    <div class="sp2" data-fs="${i}"></div></div>`).join("");
+  $$("#figs [data-fs]").forEach(h=>spark(h,FIGS[h.dataset.fs].sk,C("--s1"),30));
+}
+function renderShelf(){
+  $("#gswitch").innerHTML=GROUPS.map(g=>`<button data-g="${g.key}" aria-pressed="${g.key===gsel}">${g.label}</button>`).join("");
+  const g=GROUPS.find(x=>x.key===gsel);
+  $("#shelf").innerHTML=g.items.map(it=>{
+    const pos=it.d>0,good=it.good==="down"?!pos:pos;
+    return `<div class="mi"><div class="k"><span class="ml">${it.l}</span></div>
+      <div class="v">${it.v}</div>
+      <div class="d ${good?"up":"dn"}">${pos?"▲":"▼"} ${Math.abs(it.d)}${it.raw?"":"%"}</div></div>`}).join("");
+  $$("#gswitch button").forEach(b=>b.addEventListener("click",()=>{gsel=b.dataset.g;renderShelf()}));
+}
+function blist(host,rows,money,seed){
+  const r=lcg(seed);
+  $(host).innerHTML=rows.map((x,i)=>`<div class="br"><span class="rk">${String(i+1).padStart(2,"0")}</span>
+    <span class="av2 ${x[2]}">${x[0][0].toUpperCase()}</span><span class="un">${x[0]}</span>
+    <span class="sk" data-sk="${i}"></span>
+    <span class="vv">${money?fmt.usd2(x[1]):fmt.num(x[1])}</span></div>`).join("");
+  $$(host+" [data-sk]").forEach(h=>spark(h,Array.from({length:12},()=>0.4+r()*0.9),C("--s1"),20));
+}
+function drawUP(host,tab,whoKey){
+  const rows=UP[whoKey][tab],max=Math.max(...rows.map(x=>x[1]));
+  $(host).innerHTML=rows.map(x=>`<div class="hb"><span class="l">${x[0]}</span>
+    <span class="t"><i style="width:${(x[1]/max*100).toFixed(1)}%"></i></span>
+    <span class="v">${x[1].toFixed(1)}%</span></div>`).join("");
+}
+function recos(host,rows){$(host).innerHTML=rows.map(r=>
+  `<div class="reco"><span class="ic">${r[0]}</span><p>${r[1]}</p></div>`).join("")}
+function tsrc(host,rows){
+  $(host).innerHTML=`<thead><tr><th>Channel</th><th>GMV</th><th>Impr.</th><th>Views</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1].toFixed(2)}%</td>
+      <td>${r[2].toFixed(2)}%</td><td>${r[3].toFixed(2)}%</td></tr>`).join("")}</tbody>`}
+function bench(host,rows){const max=Math.max(...rows.map(r=>Math.max(r.v,HGPH)));
+  $(host).innerHTML=rows.map(r=>{const dl=(HGPH-r.v)/r.v*100;
+    return `<div class="bnr"><span class="l">${r.l}</span>
+      <span class="t"><i style="width:${(r.v/max*100).toFixed(1)}%;background:${r.me?"var(--s1)":"var(--rule-2)"}"></i></span>
+      <span class="v">${fmt.usd(r.v)}${r.me?"":`<div style="font-size:10.5px" class="${dl>=0?"up":"dn"}">${dl>=0?"+":""}${dl.toFixed(0)}%</div>`}</span></div>`}).join("")}
+
+function table(host,cols,rows){
+  const t=$(host);
+  t.innerHTML=`<thead><tr>${cols.map(c=>`<th class="${c.ns?"":"s"}" data-k="${c.k}">${c.l}${c.ns?"":'<span class="ar">▼</span>'}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${c.render?c.render(r):r[c.k]}</td>`).join("")}</tr>`).join("")}</tbody>`;
+  t.querySelectorAll("th.s").forEach(th=>th.addEventListener("click",()=>{
+    const k=th.dataset.k,dir=th.getAttribute("aria-sort")==="descending"?1:-1;
+    rows.sort((a,b)=>{const x=a[k+"_r"]??a[k],y=b[k+"_r"]??b[k];
+      return typeof x==="number"?(x-y)*dir:String(x).localeCompare(String(y))*dir});
+    table(host,cols,rows);
+    t.querySelector(`th[data-k="${k}"]`).setAttribute("aria-sort",dir===1?"ascending":"descending")}));
+  t.querySelectorAll("[data-rowspark]").forEach(h=>{
+    spark(h,JSON.parse(h.dataset.rowspark),C("--s1"),22)});
+}
+let SHOW_COLS=["gmv","gph","orders","aov","buyers","newp","viewers","ccv","sell","dead"];
+const ALL_COLS={gmv:"GMV",gph:"GMV / hr",orders:"Orders",aov:"AOV",buyers:"Buyers",newp:"New buyer %",
+  viewers:"Views",ccv:"Peak viewers",foll:"Followers",earn:"Est. earnings",items:"Items run",
+  refund:"Refund rate",sell:"Sell-through",oph:"Orders / hr",dead:"Dead air",bidders:"Bidders",watch:"Watch time"};
+function renderShows(){
+  const rows=shows.map(s=>({_s:s,show:s.nm,show_r:s.date.getTime(),
+    gmv:fmt.usd2(s.gmv),gmv_r:s.gmv,gph:fmt.usd(s.gmv/(s.dur/60)),gph_r:s.gmv/(s.dur/60),
+    orders:fmt.num(s.orders),orders_r:s.orders,aov:fmt.usd2(s.aov),aov_r:s.aov,
+    buyers:fmt.num(s.buyers),buyers_r:s.buyers,newp:Math.round(s.newPct)+"%",newp_r:s.newPct,
+    viewers:fmt.k(s.viewers),viewers_r:s.viewers,ccv:fmt.num(s.ccv),ccv_r:s.ccv,
+    foll:"+"+s.foll,foll_r:s.foll,earn:fmt.usd2(s.gmv*.849),earn_r:s.gmv*.849,
+    items:fmt.num(s.items),items_r:s.items,refund:"2.1%",refund_r:2.1,
+    sell:s.sell.toFixed(1)+"%",sell_r:s.sell,oph:Math.round(s.orders/(s.dur/60)),oph_r:s.orders/(s.dur/60),
+    dead:s.dead+"m",dead_r:s.dead,bidders:fmt.num(Math.round(s.orders*2.1)),bidders_r:s.orders*2.1,
+    watch:"4m "+Math.round(s.newPct%50)+"s",watch_r:s.newPct}));
+  const cols=[{k:"show",l:"Show",render:r=>`<div class="showcell"><span class="thumb"></span><span>
+    <span class="nm">${r._s.nm}</span><span class="id">${r._s.id}</span>
+    <span class="du">${r._s.date.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})} · ${fmt.dur(r._s.dur)}</span></span></div>`},
+    {k:"trend",l:"Trend",ns:1,render:r=>`<span class="cellspark" data-rowspark="${JSON.stringify(r._s.trend)}"></span>`}];
+  SHOW_COLS.forEach(k=>cols.push({k,l:ALL_COLS[k]}));
+  cols.push({k:"act",l:"",ns:1,render:()=>'<a class="tlink" href="#">Open →</a>'});
+  table("#showsTable",cols,rows);
+  $("#showsTable").querySelectorAll("tbody tr").forEach(tr=>{
+    tr.style.cursor="pointer";tr.addEventListener("click",()=>go("show"))});
+}
+
+function renderHeroGrid(){
+  $("#heroGrid").innerHTML=HERO_SEL.map(k=>{const m=CAT[k];if(!m)return"";
+    return `<div class="hg"><div class="k"><span class="ml">${m.l}</span>
+      ${m.tip?`<span class="info" title="${m.tip}">i</span>`:""}</div>
+      <div class="v">${bigsmall(m.v)}</div></div>`}).join("");
+  $("#heroCount").textContent=HERO_SEL.length+" of 16";
+}
+let pickMode="cols";
+function openPicker(mode){
+  pickMode=mode;const isHero=mode==="hero";
+  const get=()=>isHero?HERO_SEL:SHOW_COLS,set=v=>{isHero?HERO_SEL=v:SHOW_COLS=v};
+  const label=k=>isHero?(CAT[k]?.l||k):(ALL_COLS[k]||k);
+  const groups=isHero?CATALOG.reduce((a,m)=>{(a[m.g]=a[m.g]||[]).push(m.k);return a},{})
+    :{"Sales":["gmv","earn","orders","aov","refund","gph"],"Buyers":["buyers","newp","bidders"],
+      "Audience":["viewers","ccv","foll","watch"],"Pace":["sell","oph","dead","items"]};
+  $("#mTitle").innerHTML=(isHero?"Select metrics":"Choose columns")+' <span class="sub16">— up to 16, drag to reorder</span>';
+  $("#mpick").innerHTML=Object.entries(groups).map(([g,ks])=>
+    `<div class="mgrp ml">${g}</div><div class="mopts">${ks.map(k=>
+      `<label class="mopt"><input type="checkbox" data-k="${k}" ${get().includes(k)?"checked":""}>
+        <span>${label(k)}${isHero&&CAT[k]?.tt&&CAT[k].tt!==CAT[k].l?`<span class="tt">TikTok: ${CAT[k].tt}</span>`:""}</span></label>`).join("")}</div>`).join("");
+  const sync=()=>{$("#selCount").textContent=get().length+(isHero?" of 16 metrics":" columns selected");
+    $("#selList").innerHTML=get().map(k=>`<div class="selrow" draggable="true" data-k="${k}">
+      <span style="color:var(--ink-3);cursor:grab">⠿</span><span>${label(k)}</span>
+      <button class="x" data-rm="${k}" aria-label="Remove">×</button></div>`).join("");
+    $$("#selList .x").forEach(b=>b.addEventListener("click",()=>{set(get().filter(x=>x!==b.dataset.rm));
+      const cb=$(`#mpick input[data-k="${b.dataset.rm}"]`);if(cb)cb.checked=false;sync()}));
+    let src=null;
+    $$("#selList .selrow").forEach(r=>{
+      r.addEventListener("dragstart",()=>{src=r.dataset.k});
+      r.addEventListener("dragover",e=>e.preventDefault());
+      r.addEventListener("drop",e=>{e.preventDefault();const dst=r.dataset.k;
+        if(!src||src===dst)return;const a=get().filter(x=>x!==src),i=a.indexOf(dst);
+        a.splice(i,0,src);set(a);sync()})})};
+  $$("#mpick input").forEach(cb=>cb.addEventListener("change",()=>{const k=cb.dataset.k;
+    if(cb.checked){if(get().length>=16){cb.checked=false;toast("Up to 16 at a time");return}
+      if(!get().includes(k))set([...get(),k])}
+    else set(get().filter(x=>x!==k));sync()}));
+  sync();$("#mask").classList.remove("hidden");
+}
+
+/* ═══════════ nav ═══════════ */
+function drawOverall(){drawExplore();drawHeat();drawGph();
+  drawMix();drawCohort();drawLtv();
+  drawShareArea("#trafChart","#trafTip","#trafLgd",TRAFW,TRAF,"#trafNote");
+  drawShareArea("#fmtChart","#fmtTip","#fmtLgd",FMTW,FMT);
+  drawFunnel("#funChart","#funTip",FUNNEL,250);drawSell();drawDead()}
+function drawShow(){drawTL();drawFunnel("#shFun","#shFunTip",SH_FUNNEL,240);
+  drawDonut("#shDonut","#shDonutTip",SH_DONUT,"SOURCES","41%");
+  drawDonut("#shMix","#shMixTip",SH_BUYMIX,"RETURNING","41%");
+  drawScatter();drawWatch();drawGive()}
+/* A single rAF after un-hiding a section can still run before the browser
+   has laid it out, so every svg.clientWidth reads 0 and the charts draw
+   into nothing. Wait for a frame in which the section actually has width,
+   then draw. */
+function whenLaidOut(sel,fn,tries){
+  const s=$(sel);
+  if(s&&s.clientWidth>0)return fn();
+  if((tries||0)>20)return fn();
+  requestAnimationFrame(()=>whenLaidOut(sel,fn,(tries||0)+1));
+}
+function go(v){
+  ["overall","shows","show"].forEach(n=>$("#v-"+n).classList.toggle("hidden",n!==v));
+  $$(".vtab").forEach(t=>t.setAttribute("aria-selected",String(t.dataset.v===(v==="show"?"shows":v))));
+  window.scrollTo(0,0);
+  whenLaidOut("#v-"+v,()=>{
+    if(v==="overall")drawOverall();if(v==="show")drawShow()});   // Shows is a list, no charts
+}
+$$(".vtab").forEach(t=>t.addEventListener("click",()=>{
+  if(t.dataset.v)go(t.dataset.v);else toast("Out of scope for this prototype")}));
+$("#backBtn").addEventListener("click",()=>go("shows"));
+$$(".uptab").forEach(t=>t.addEventListener("click",()=>{
+  const g=t.dataset.up?"up":"sp";
+  $$(`.uptab[data-${g}]`).forEach(x=>x.setAttribute("aria-selected","false"));
+  t.setAttribute("aria-selected","true");
+  drawUP(g==="up"?"#upBody":"#spBody",t.dataset.up||t.dataset.sp,g==="up"?who2:who)}));
+$$(".seg").forEach(s=>s.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  if(s.id==="tPick"){const k=b.dataset.m,on=b.getAttribute("aria-pressed")==="true";
+    if(on&&tSel.length>1)tSel=tSel.filter(x=>x!==k);
+    else if(!on){if(tSel.length>=2)tSel.shift();tSel.push(k)}
+    else{toast("Keep at least one metric");return}
+    [...s.children].forEach(c=>c.setAttribute("aria-pressed",String(tSel.includes(c.dataset.m))));
+    drawTL();return}
+  [...s.children].forEach(c=>c.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");
+  if(s.id==="tWin"){tWin=b.dataset.w;drawTL()}
+  if(s.id==="exMode"){EX.mode=b.dataset.m;drawExplore()}
+  if(s.id==="whoSeg"){who=b.dataset.who;drawUP("#spBody",$(".uptab[data-sp][aria-selected='true']").dataset.sp,who)}
+  if(s.id==="whoSeg2"){who2=b.dataset.who;drawUP("#upBody",$(".uptab[data-up][aria-selected='true']").dataset.up,who2)}
+}));
+$("#tPick").innerHTML=Object.entries(TREND).map(([k,v])=>
+  `<button data-m="${k}" aria-pressed="${tSel.includes(k)}">${v.l}</button>`).join("");
+$("#metricsBtn").addEventListener("click",()=>openPicker("cols"));
+$("#heroCustom").addEventListener("click",()=>openPicker("hero"));
+$("#mCancel").addEventListener("click",()=>$("#mask").classList.add("hidden"));
+$("#mApply").addEventListener("click",()=>{$("#mask").classList.add("hidden");
+  if(pickMode==="hero"){renderHeroGrid();toast(HERO_SEL.length+" metrics applied")}
+  else{renderShows();toast(SHOW_COLS.length+" columns applied")}});
+$("#mask").addEventListener("click",e=>{if(e.target.id==="mask")$("#mask").classList.add("hidden")});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-x]");
+  if(b)toast("Exporting “"+b.dataset.x+"” to CSV…")});
+if("IntersectionObserver" in window){
+  const links=$$(".rail a");
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)
+    links.forEach(l=>l.classList.toggle("on",l.dataset.c===en.target.id))}),
+    {rootMargin:"-140px 0px -55% 0px"});
+  $$(".chapter").forEach(c=>io.observe(c));
+  links.forEach(l=>l.addEventListener("click",e=>{e.preventDefault();
+    const t=document.getElementById(l.dataset.c);
+    window.scrollTo({top:t.getBoundingClientRect().top+window.scrollY-130,behavior:"smooth"})}))}
+
+/* ═══════════ init ═══════════ */
+renderFigs();renderShelf();initExplorer();
+blist("#topSales",TOP_SALES,true,11);blist("#topOrders",TOP_ORDERS,false,12);
+drawUP("#upBody","age",who2);drawUP("#spBody","age",who);
+recos("#observations",OBS);recos("#shReco",SH_RECO);
+$("#opps").innerHTML=OPPS.map(o=>`<div class="opp"><div class="n">${o[0]}</div>
+  <div class="amt">${o[2]}</div><div class="w">${o[1]}</div></div>`).join("");
+tsrc("#shTsrc",SH_TRAF);
+const s0=shows[0];
+$("#shTitle").textContent=s0.nm;
+$("#shSub").innerHTML=`${s0.date.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"})}
+  <span class="sep">·</span>7:02 – 9:43 PM PT <span class="sep">·</span><b>${fmt.dur(s0.dur)}</b> live
+  <span class="sep">·</span>${fmt.num(H.items)} items run`;
+$("#shMeta").textContent="Duration 2 hr 41 min · Aug 10, 19:02:11 – 21:43:05 PDT";
+$("#heroGmv").textContent=fmt.num(H.gmv);
+$("#heroSplit").innerHTML=`<span>Auction <b>${fmt.usd2(H.auction)}</b></span>
+  <span>Buy Now <b>${fmt.usd2(H.bin)}</b></span>`;
+$("#heroChips").innerHTML=[["Items sold",fmt.num(H.orders)],["Auction items",fmt.num(1631)],
+  ["Unique buyers",fmt.num(H.buyers)],["Peak viewers",fmt.num(H.ccv)]]
+  .map(c=>`<div class="c"><div class="ml">${c[0]}</div><div class="v">${c[1]}</div></div>`).join("");
+renderHeroGrid();
+bench("#benchRows",[{l:"This show",v:HGPH,me:1},{l:"Your last show",v:34620},{l:"Your L28 average",v:36880},
+  {l:"Your best ever",v:58400},{l:"Same weekday avg",v:39150}]);
+bench("#peerRows",[{l:"This show",v:HGPH,me:1},{l:"Peer median",v:38400},{l:"Peer top quartile",v:53600}]);
+table("#prodTable",[{k:"p",l:"Item"},{k:"bidsk",l:"Bids over time",ns:1,
+    render:r=>`<span class="cellspark" data-rowspark="${r.bidsk}"></span>`},
+  {k:"sold",l:"Sold"},{k:"gmv",l:"GMV"},{k:"avg",l:"Avg. price"},{k:"t",l:"Sold at",ns:1},
+  {k:"imp",l:"Impressions"},{k:"ctr",l:"CTR"},{k:"st",l:"Sell-through"}],
+  PRODS.map((p,i)=>{const r=lcg(500+i);
+    return{p:p[0],sold:p[1],sold_r:p[1],gmv:fmt.usd2(p[2]),gmv_r:p[2],avg:fmt.usd2(p[3]),avg_r:p[3],t:p[4],
+      imp:fmt.num(Math.round(p[1]*(38+r()*90))),imp_r:p[1]*60,
+      ctr:(2.4+r()*5.6).toFixed(2)+"%",ctr_r:2.4+r()*5.6,
+      st:(62+r()*34).toFixed(1)+"%",st_r:62+r()*34,
+      bidsk:JSON.stringify(Array.from({length:10},()=>0.3+r()))}}));
+table("#buyerTable",[{k:"b",l:"Buyer"},{k:"o",l:"Orders this show"},{k:"s",l:"Spent this show"},
+  {k:"lt",l:"Lifetime spend"},{k:"lo",l:"Lifetime orders"},{k:"prev",l:"Previous show",ns:1}],
+  BUYERS.map(b=>({b:b[0],o:b[1],o_r:b[1],s:fmt.usd2(b[2]),s_r:b[2],lt:fmt.usd2(b[3]),lt_r:b[3],
+    lo:b[4],lo_r:b[4],prev:b[5]})));
+renderShows();drawOverall();
+let rz;window.addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>{
+  if(!$("#v-overall").classList.contains("hidden"))drawOverall();
+  if(!$("#v-show").classList.contains("hidden"))drawShow()},180)});
+})();
+</script>
