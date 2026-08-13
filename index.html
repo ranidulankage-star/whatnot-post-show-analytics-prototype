@@ -417,7 +417,7 @@ details.disc .db{padding:10px 0 0}
           <div class="g2">
             <div>
               <div class="bh"><div class="t"><h3>New vs. returning</h3>
-                <div class="s">Weekly buyer mix. Repeat behaviour is the differentiator.</div></div></div>
+                <div class="s">Weekly buyer mix, split by how long they have been buying from you.</div></div></div>
               <div class="lgd" id="mixLgd" style="margin-bottom:12px"></div>
               <div class="cw"><svg class="chart" id="mixChart" height="220"></svg><div class="tip" id="mixTip"></div></div>
             </div>
@@ -863,34 +863,34 @@ const TOP_ORDERS=[["rippedandgraded",621,"p"],["boxbreakbetty",460,""],["mint_or
 
 /* ═══════════ metric catalogue — every value populated ═══════════ */
 const CATALOG=[
-  {g:"Transaction",k:"gmv",l:"GMV",v:N2(H.gmv),tt:"Attributed GMV"},
+  {g:"Transaction",k:"gmv",l:"GMV",v:N2(H.gmv)},
   {g:"Transaction",k:"earn",l:"Estimated earnings",v:N2(H.gmv*.849),
     tip:"After Whatnot fees and payment processing. Excludes your COGS and shipping."},
-  {g:"Transaction",k:"buyers",l:"Unique buyers",v:fmt.num(H.buyers),tt:"Customers"},
-  {g:"Transaction",k:"orders",l:"Orders",v:fmt.num(H.orders),tt:"Orders"},
-  {g:"Transaction",k:"aov",l:"AOV",v:N2(H.aov),tt:"Avg. Price (Main orders)"},
+  {g:"Transaction",k:"buyers",l:"Unique buyers",v:fmt.num(H.buyers)},
+  {g:"Transaction",k:"orders",l:"Orders",v:fmt.num(H.orders)},
+  {g:"Transaction",k:"aov",l:"AOV",v:N2(H.aov)},
   {g:"Transaction",k:"auc",l:"Auction GMV",v:N2(H.auction)},
   {g:"Transaction",k:"bin",l:"Buy Now GMV",v:N2(H.bin)},
-  {g:"Transaction",k:"items",l:"Items sold",v:fmt.num(H.orders),tt:"Created SKU orders"},
+  {g:"Transaction",k:"items",l:"Items sold",v:fmt.num(H.orders)},
   {g:"Transaction",k:"refund",l:"Refund rate",v:"2.10%"},
   {g:"Traffic efficiency",k:"impr",l:"Impressions",v:(H_IMPR/1e6).toFixed(2)+"M"},
-  {g:"Traffic efficiency",k:"views",l:"Views",v:fmt.num(H.viewers),tt:"Views"},
-  {g:"Traffic efficiency",k:"gpm",l:"Show GPM",v:N2(H.gmv/H_IMPR*1000),tip:"GMV per 1,000 impressions.",tt:"Show GPM"},
+  {g:"Traffic efficiency",k:"views",l:"Views",v:fmt.num(H.viewers)},
+  {g:"Traffic efficiency",k:"gpm",l:"Show GPM",v:N2(H.gmv/H_IMPR*1000),tip:"GMV per 1,000 impressions."},
   {g:"Traffic efficiency",k:"iph",l:"Impressions / hour",v:(H_IMPR/(H.dur/60)/1000).toFixed(2)+"K"},
-  {g:"Traffic efficiency",k:"enter",l:"Enter show rate",v:"1.01%",tt:"Enter room rate"},
-  {g:"Traffic efficiency",k:"watch",l:"Avg. watch time",v:"4m 12s",tt:"Avg. viewing duration"},
-  {g:"Traffic efficiency",k:"wgpm",l:"Watch GPM",v:"91.40",tt:"Watch GPM"},
-  {g:"Traffic efficiency",k:"pimp",l:"Item impressions",v:"412.80K",tt:"Product Impressions"},
-  {g:"Traffic efficiency",k:"ptap",l:"Item taps",v:fmt.num(31240),tt:"Product clicks"},
-  {g:"Traffic efficiency",k:"ctr",l:"Show CTR",v:"7.57%",tt:"CTR"},
-  {g:"Traffic efficiency",k:"ctor",l:"Tap-to-order rate",v:"6.42%",tt:"CTOR"},
-  {g:"Traffic efficiency",k:"v1m",l:"Views over 1 min",v:fmt.num(9420),tt:">1 min. views"},
-  {g:"Interactions",k:"foll",l:"Followers gained",v:fmt.num(H.foll),tt:"New followers"},
+  {g:"Traffic efficiency",k:"enter",l:"Enter show rate",v:"1.01%"},
+  {g:"Traffic efficiency",k:"watch",l:"Avg. watch time",v:"4m 12s"},
+  {g:"Traffic efficiency",k:"wgpm",l:"Watch GPM",v:"91.40"},
+  {g:"Traffic efficiency",k:"pimp",l:"Item impressions",v:"412.80K"},
+  {g:"Traffic efficiency",k:"ptap",l:"Item taps",v:fmt.num(31240)},
+  {g:"Traffic efficiency",k:"ctr",l:"Show CTR",v:"7.57%"},
+  {g:"Traffic efficiency",k:"ctor",l:"Tap-to-order rate",v:"6.42%"},
+  {g:"Traffic efficiency",k:"v1m",l:"Views over 1 min",v:fmt.num(9420)},
+  {g:"Interactions",k:"foll",l:"Followers gained",v:fmt.num(H.foll)},
   {g:"Interactions",k:"frate",l:"Follow rate",v:N2(H.foll/H.viewers*100)+"%"},
-  {g:"Interactions",k:"comm",l:"Comments",v:fmt.num(11840),tt:"Comments"},
+  {g:"Interactions",k:"comm",l:"Comments",v:fmt.num(11840)},
   {g:"Interactions",k:"crate",l:"Comment rate",v:"64.10%"},
-  {g:"Interactions",k:"share",l:"Shares",v:fmt.num(1284),tt:"Shares"},
-  {g:"Interactions",k:"like",l:"Likes",v:fmt.num(48210),tt:"Likes"},
+  {g:"Interactions",k:"share",l:"Shares",v:fmt.num(1284)},
+  {g:"Interactions",k:"like",l:"Likes",v:fmt.num(48210)},
   {g:"Audience",k:"ccv",l:"Peak concurrent",v:fmt.num(H.ccv)},
   {g:"Audience",k:"ret",l:"Returning buyer rate",v:N2(100-H.newPct)+"%"},
   {g:"Audience",k:"newyou",l:"New to you",v:fmt.num(Math.round(H.buyers*H.newPct/100))},
@@ -902,10 +902,10 @@ const CATALOG=[
   {g:"Pace",k:"sell",l:"Sell-through",v:N2(H.orders/H.items*100)+"%"},
   {g:"Pace",k:"dead",l:"Dead air",v:H.dead+" min"},
   {g:"Pace",k:"itemsrun",l:"Items run",v:fmt.num(H.items)},
-  {g:"Ads",k:"roas",l:"Ads ROAS",v:"4.12",tt:"Ads ROAS"},
+  {g:"Ads",k:"roas",l:"Ads ROAS",v:"4.12"},
   {g:"Ads",k:"acost",l:"Ads cost",v:N2(2840)},
   {g:"Ads",k:"agmv",l:"Ads GMV",v:N2(11700)},
-  {g:"Ads",k:"aord",l:"Ads orders",v:fmt.num(198),tt:"Ads SKU Orders"}
+  {g:"Ads",k:"aord",l:"Ads orders",v:fmt.num(198)}
 ];
 const CAT=Object.fromEntries(CATALOG.map(m=>[m.k,m]));
 let HERO_SEL=["gmv","earn","orders","aov","buyers","gph","impr","gpm","views","ret","sell","oph"];
@@ -1674,7 +1674,7 @@ function openPicker(mode){
   $("#mpick").innerHTML=Object.entries(groups).map(([g,ks])=>
     `<div class="mgrp ml">${g}</div><div class="mopts">${ks.map(k=>
       `<label class="mopt"><input type="checkbox" data-k="${k}" ${get().includes(k)?"checked":""}>
-        <span>${label(k)}${isHero&&CAT[k]?.tt&&CAT[k].tt!==CAT[k].l?`<span class="tt">TikTok: ${CAT[k].tt}</span>`:""}</span></label>`).join("")}</div>`).join("");
+        <span>${label(k)}</span></label>`).join("")}</div>`).join("");
   const sync=()=>{$("#selCount").textContent=get().length+(isHero?" of 16 metrics":" columns selected");
     $("#selList").innerHTML=get().map(k=>`<div class="selrow" draggable="true" data-k="${k}">
       <span style="color:var(--ink-3);cursor:grab">⠿</span><span>${label(k)}</span>
